@@ -1,0 +1,855 @@
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Product, Category, ProductImage } from "@/types";
+import { formatPrice } from "@/lib/utils";
+import ImageUploadManager from "@/components/admin/ImageUploadManager";
+import {
+  Plus,
+  Minus,
+  Search,
+  AlertTriangle,
+  Check,
+  Edit2,
+  X,
+  Loader2,
+  Filter,
+  CheckCircle2,
+  AlertCircle,
+  Package,
+  Layers,
+  ArrowUpDown,
+  ExternalLink,
+} from "lucide-react";
+
+interface InventoryManagerProps {
+  initialProducts: Product[];
+  categories: Category[];
+}
+
+export default function InventoryManager({ initialProducts, categories }: InventoryManagerProps) {
+  const router = useRouter();
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [stockFilter, setStockFilter] = useState<"all" | "in_stock" | "low_stock" | "out_of_stock">("all");
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+
+  // Edit Modal State
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [isDirty, setIsDirty] = useState(false);
+
+  // Notification Toast
+  const [notification, setNotification] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  const showNotification = (message: string, type: "success" | "error" = "success") => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification((curr) => (curr?.message === message ? null : curr));
+    }, 4000);
+  };
+
+  // Filtering
+  const filtered = products.filter((p) => {
+    const q = search.toLowerCase().trim();
+    const matchesSearch =
+      !q ||
+      p.name.toLowerCase().includes(q) ||
+      p.sku.toLowerCase().includes(q) ||
+      p.variety.toLowerCase().includes(q) ||
+      p.species.toLowerCase().includes(q);
+
+    const matchesCategory = selectedCategory === "all" || p.category_id === selectedCategory;
+
+    let matchesStock = true;
+    if (stockFilter === "out_of_stock") {
+      matchesStock = p.stock_quantity === 0;
+    } else if (stockFilter === "low_stock") {
+      matchesStock = p.stock_quantity > 0 && p.stock_quantity <= p.low_stock_threshold;
+    } else if (stockFilter === "in_stock") {
+      matchesStock = p.stock_quantity > p.low_stock_threshold;
+    }
+
+    return matchesSearch && matchesCategory && matchesStock;
+  });
+
+  // KPI Calculations
+  const totalItems = products.length;
+  const outOfStockCount = products.filter((p) => p.stock_quantity === 0).length;
+  const lowStockCount = products.filter((p) => p.stock_quantity > 0 && p.stock_quantity <= p.low_stock_threshold).length;
+  const adequateCount = products.filter((p) => p.stock_quantity > p.low_stock_threshold).length;
+
+  // Quick Stock Step (+1 / -1)
+  const handleQuickStep = async (productId: string, newQty: number) => {
+    if (newQty < 0) return;
+    setUpdatingId(productId);
+
+    try {
+      const res = await fetch("/api/admin/inventory", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, quantity: newQty }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setProducts((prev) =>
+          prev.map((p) => (p.id === productId ? { ...p, stock_quantity: newQty } : p))
+        );
+        showNotification(`Stock count for ${data.product.name} updated to ${newQty}.`, "success");
+        router.refresh();
+      } else {
+        showNotification(data.error || "Failed to adjust stock count.", "error");
+      }
+    } catch {
+      showNotification("Network error while updating stock.", "error");
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  // Open Full Edit Modal
+  const handleOpenEdit = (p: Product) => {
+    setEditingProduct({ ...p, images: p.images ? [...p.images] : [] });
+    setFormError("");
+    setIsDirty(false);
+    setIsModalOpen(true);
+  };
+
+  // Cancel with unsaved check
+  const handleCancel = () => {
+    if (isDirty) {
+      if (!confirm("You have unsaved changes. Are you sure you want to discard them?")) {
+        return;
+      }
+    }
+    setIsModalOpen(false);
+    setEditingProduct(null);
+    setIsDirty(false);
+  };
+
+  // Save Full Product & Inventory Changes
+  const handleSaveProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+
+    if (!editingProduct.name.trim()) {
+      setFormError("Specimen name is required.");
+      return;
+    }
+    if (editingProduct.price <= 0) {
+      setFormError("Price must be greater than 0 PKR.");
+      return;
+    }
+    if (editingProduct.stock_quantity < 0) {
+      setFormError("Stock quantity cannot be negative.");
+      return;
+    }
+
+    setIsSaving(true);
+    setFormError("");
+
+    try {
+      const res = await fetch("/api/admin/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingProduct),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setFormError(data.error || "Failed to persist specimen changes.");
+        setIsSaving(false);
+        return;
+      }
+
+      const saved: Product = data.product;
+      setProducts((prev) => {
+        const idx = prev.findIndex((p) => p.id === saved.id);
+        if (idx >= 0) {
+          const clone = [...prev];
+          clone[idx] = saved;
+          return clone;
+        }
+        return [saved, ...prev];
+      });
+
+      showNotification(`Specimen "${saved.name}" saved and synced successfully.`, "success");
+      setIsModalOpen(false);
+      setEditingProduct(null);
+      setIsDirty(false);
+      router.refresh();
+    } catch {
+      setFormError("Network error while saving changes.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Toast Notification */}
+      {notification && (
+        <div
+          className={`fixed bottom-6 right-6 z-50 p-4 rounded-2xl shadow-2xl flex items-center gap-3 border text-xs transition-all ${
+            notification.type === "success"
+              ? "bg-emerald-950 text-emerald-100 border-emerald-700/60"
+              : "bg-red-950 text-red-100 border-red-700/60"
+          }`}
+        >
+          {notification.type === "success" ? (
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          ) : (
+            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+          )}
+          <span className="font-medium">{notification.message}</span>
+        </div>
+      )}
+
+      {/* KPI Summary Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div
+          onClick={() => setStockFilter("all")}
+          className={`p-4 rounded-2xl bg-white border cursor-pointer transition-all shadow-subtle ${
+            stockFilter === "all" ? "border-botanical-800 ring-2 ring-botanical-800/10" : "border-botanical-200"
+          }`}
+        >
+          <span className="text-[11px] font-medium text-charcoal-muted uppercase tracking-wider block">
+            Total Catalog
+          </span>
+          <span className="text-xl font-bold font-mono text-botanical-950 mt-1 block">
+            {totalItems}
+          </span>
+          <span className="text-[10px] text-charcoal-muted">Specimens tracked</span>
+        </div>
+
+        <div
+          onClick={() => setStockFilter("in_stock")}
+          className={`p-4 rounded-2xl bg-white border cursor-pointer transition-all shadow-subtle ${
+            stockFilter === "in_stock" ? "border-emerald-600 ring-2 ring-emerald-600/10" : "border-botanical-200"
+          }`}
+        >
+          <span className="text-[11px] font-medium text-emerald-700 uppercase tracking-wider block">
+            Adequate Stock
+          </span>
+          <span className="text-xl font-bold font-mono text-emerald-800 mt-1 block">
+            {adequateCount}
+          </span>
+          <span className="text-[10px] text-charcoal-muted">Above alert threshold</span>
+        </div>
+
+        <div
+          onClick={() => setStockFilter("low_stock")}
+          className={`p-4 rounded-2xl bg-white border cursor-pointer transition-all shadow-subtle ${
+            stockFilter === "low_stock" ? "border-amber-600 ring-2 ring-amber-600/10" : "border-botanical-200"
+          }`}
+        >
+          <span className="text-[11px] font-medium text-amber-700 uppercase tracking-wider block">
+            Low Stock Alerts
+          </span>
+          <span className="text-xl font-bold font-mono text-amber-800 mt-1 block">
+            {lowStockCount}
+          </span>
+          <span className="text-[10px] text-charcoal-muted">Requires nursery restock</span>
+        </div>
+
+        <div
+          onClick={() => setStockFilter("out_of_stock")}
+          className={`p-4 rounded-2xl bg-white border cursor-pointer transition-all shadow-subtle ${
+            stockFilter === "out_of_stock" ? "border-red-600 ring-2 ring-red-600/10" : "border-botanical-200"
+          }`}
+        >
+          <span className="text-[11px] font-medium text-red-700 uppercase tracking-wider block">
+            Out of Stock
+          </span>
+          <span className="text-xl font-bold font-mono text-red-800 mt-1 block">
+            {outOfStockCount}
+          </span>
+          <span className="text-[10px] text-charcoal-muted">Zero bench inventory</span>
+        </div>
+      </div>
+
+      {/* Filter and Search Bar */}
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-botanical-200 shadow-subtle">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+          {/* Search */}
+          <div className="relative flex-1">
+            <input
+              type="text"
+              placeholder="Filter by specimen name, SKU, variety..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-ivory border border-botanical-300 rounded-xl pl-9 pr-4 py-2 text-xs text-botanical-950 focus:outline-none focus:border-botanical-700"
+            />
+            <Search className="w-4 h-4 text-botanical-400 absolute left-3 top-2.5" />
+          </div>
+
+          {/* Category Dropdown */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="bg-ivory border border-botanical-300 rounded-xl px-3 py-2 text-xs text-botanical-950 focus:outline-none focus:border-botanical-700"
+          >
+            <option value="all">All Categories ({products.length})</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+
+          {/* Stock Filter Dropdown */}
+          <select
+            value={stockFilter}
+            onChange={(e) => setStockFilter(e.target.value as unknown as "all")}
+            className="bg-ivory border border-botanical-300 rounded-xl px-3 py-2 text-xs text-botanical-950 focus:outline-none focus:border-botanical-700"
+          >
+            <option value="all">All Stock Statuses</option>
+            <option value="in_stock">In Stock (Adequate)</option>
+            <option value="low_stock">Low Stock Alerts</option>
+            <option value="out_of_stock">Out of Stock Only</option>
+          </select>
+        </div>
+
+        <div className="text-xs text-charcoal-muted self-end lg:self-center">
+          Showing <span className="font-semibold text-botanical-950">{filtered.length}</span> specimens
+        </div>
+      </div>
+
+      {/* Inventory Table */}
+      <div className="rounded-2xl bg-white border border-botanical-200/80 shadow-subtle overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-botanical-50 border-b border-botanical-200 text-botanical-800">
+              <tr>
+                <th className="py-3 px-4 font-semibold">Specimen Variety</th>
+                <th className="py-3 px-4 font-semibold">Category</th>
+                <th className="py-3 px-4 font-semibold">SKU</th>
+                <th className="py-3 px-4 font-semibold text-right">Unit Price</th>
+                <th className="py-3 px-4 font-semibold text-center">Alert Status</th>
+                <th className="py-3 px-4 font-semibold text-center">Current Stock</th>
+                <th className="py-3 px-4 font-semibold text-center">Quick Adjust</th>
+                <th className="py-3 px-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-botanical-100">
+              {filtered.map((prod) => {
+                const isOut = prod.stock_quantity === 0;
+                const isLow = prod.stock_quantity <= prod.low_stock_threshold && !isOut;
+                const isUpdating = updatingId === prod.id;
+
+                return (
+                  <tr key={prod.id} className="hover:bg-ivory/50 transition-colors">
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-ivory-sand border border-botanical-200 flex-shrink-0">
+                          <img
+                            src={prod.images?.[0]?.image_url || "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=400&auto=format&fit=crop"}
+                            alt={prod.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <span className="font-semibold text-botanical-950 block truncate max-w-xs">
+                            {prod.name}
+                          </span>
+                          <span className="text-charcoal-muted text-[11px] block truncate">
+                            {prod.species} · {prod.variety}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="py-3.5 px-4 text-charcoal-muted font-medium">
+                      {prod.category_name || "Grafted"}
+                    </td>
+
+                    <td className="py-3.5 px-4 font-mono text-charcoal-muted">
+                      {prod.sku}
+                    </td>
+
+                    <td className="py-3.5 px-4 text-right font-mono font-semibold text-botanical-950">
+                      {formatPrice(prod.sale_price ?? prod.price)}
+                    </td>
+
+                    <td className="py-3.5 px-4 text-center">
+                      {isOut ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 font-semibold text-[10px]">
+                          <AlertTriangle className="w-3 h-3 text-red-600" /> Out of Stock
+                        </span>
+                      ) : isLow ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold text-[10px]">
+                          Low (≤ {prod.low_stock_threshold})
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px]">
+                          <Check className="w-3 h-3" /> Adequate ({prod.stock_quantity})
+                        </span>
+                      )}
+                    </td>
+
+                    <td className="py-3.5 px-4 text-center">
+                      <span
+                        className={`font-mono text-sm font-bold px-2 py-0.5 rounded ${
+                          isOut
+                            ? "bg-red-50 text-red-700"
+                            : isLow
+                            ? "bg-amber-50 text-amber-700"
+                            : "text-botanical-950"
+                        }`}
+                      >
+                        {prod.stock_quantity}
+                      </span>
+                    </td>
+
+                    {/* Quick Adjust Buttons */}
+                    <td className="py-3.5 px-4 text-center">
+                      <div className="inline-flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleQuickStep(prod.id, prod.stock_quantity - 1)}
+                          disabled={prod.stock_quantity <= 0 || isUpdating}
+                          className="p-1 rounded-lg border border-botanical-300 hover:bg-botanical-100 text-botanical-900 disabled:opacity-30 transition-colors"
+                          title="Decrease stock by 1"
+                        >
+                          <Minus className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleQuickStep(prod.id, prod.stock_quantity + 1)}
+                          disabled={isUpdating}
+                          className="p-1 rounded-lg border border-botanical-300 hover:bg-botanical-100 text-botanical-900 transition-colors"
+                          title="Increase stock by 1"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+
+                    {/* Action Column with Explicit Working Edit Button */}
+                    <td className="py-3.5 px-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <a
+                          href={`/shop/${prod.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-1.5 rounded-lg text-botanical-500 hover:text-botanical-950 hover:bg-botanical-100 transition-colors"
+                          title="Preview on live storefront"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(prod)}
+                          className="px-3 py-1.5 rounded-lg bg-botanical-900 hover:bg-botanical-950 text-ivory text-xs font-semibold inline-flex items-center gap-1.5 shadow-subtle transition-colors"
+                          title="Edit specimen details and inventory levels"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                          <span>Edit</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={8} className="py-12 text-center text-charcoal-muted">
+                    <p className="font-medium text-sm">No specimens match your search or filter criteria.</p>
+                    <p className="text-[11px] mt-1">Try resetting the category or stock status filters.</p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Full Edit Modal */}
+      {isModalOpen && editingProduct && (
+        <div className="fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6 flex items-center justify-center">
+          <div
+            className="fixed inset-0 bg-botanical-950/60 backdrop-blur-sm"
+            onClick={handleCancel}
+          />
+
+          <div className="relative w-full max-w-3xl bg-white rounded-3xl border border-botanical-200 shadow-2xl p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-botanical-100">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-clay font-semibold">
+                  Inventory & Specimen Editor
+                </span>
+                <h2 className="font-serif text-xl sm:text-2xl font-bold text-botanical-950">
+                  Edit: {editingProduct.name}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="p-1.5 text-botanical-400 hover:text-botanical-950 rounded-lg hover:bg-botanical-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {formError && (
+              <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                <span>{formError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveProduct} className="space-y-6 text-xs">
+              {/* Primary Identity Section */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    Specimen Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editingProduct.name}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, name: e.target.value });
+                      setIsDirty(true);
+                    }}
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5 text-botanical-950 focus:outline-none focus:border-botanical-700 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    SKU Code *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editingProduct.sku}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, sku: e.target.value });
+                      setIsDirty(true);
+                    }}
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5 font-mono text-botanical-950"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    Product Category *
+                  </label>
+                  <select
+                    value={editingProduct.category_id}
+                    onChange={(e) => {
+                      const catId = e.target.value;
+                      const catName = categories.find((c) => c.id === catId)?.name || "";
+                      setEditingProduct({
+                        ...editingProduct,
+                        category_id: catId,
+                        category_name: catName,
+                      });
+                      setIsDirty(true);
+                    }}
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5 text-botanical-950 font-medium"
+                  >
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    Species Lineage
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.species}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, species: e.target.value });
+                      setIsDirty(true);
+                    }}
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    Plant Variety & Cultivar
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.variety}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, variety: e.target.value });
+                      setIsDirty(true);
+                    }}
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5"
+                  />
+                </div>
+              </div>
+
+              {/* Pricing & Stock Management Section */}
+              <div className="p-4 rounded-2xl bg-ivory/80 border border-botanical-200 space-y-4">
+                <span className="font-serif text-sm font-semibold text-botanical-950 block">
+                  Stock Safeguards & Pricing (PKR)
+                </span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block font-medium text-botanical-900 mb-1">
+                      Selling Price (PKR) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min={0}
+                      value={editingProduct.price}
+                      onChange={(e) => {
+                        setEditingProduct({ ...editingProduct, price: Number(e.target.value) });
+                        setIsDirty(true);
+                      }}
+                      className="w-full bg-white border border-botanical-300 rounded-xl px-3 py-2 font-mono text-botanical-950 font-semibold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium text-botanical-900 mb-1">
+                      Sale Price (Optional)
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={editingProduct.sale_price ?? ""}
+                      placeholder="e.g. 4500"
+                      onChange={(e) => {
+                        setEditingProduct({
+                          ...editingProduct,
+                          sale_price: e.target.value ? Number(e.target.value) : null,
+                        });
+                        setIsDirty(true);
+                      }}
+                      className="w-full bg-white border border-botanical-300 rounded-xl px-3 py-2 font-mono text-botanical-950"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium text-botanical-900 mb-1">
+                      Available Stock Qty *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min={0}
+                      value={editingProduct.stock_quantity}
+                      onChange={(e) => {
+                        setEditingProduct({
+                          ...editingProduct,
+                          stock_quantity: Math.max(0, parseInt(e.target.value, 10) || 0),
+                        });
+                        setIsDirty(true);
+                      }}
+                      className="w-full bg-white border border-botanical-300 rounded-xl px-3 py-2 font-mono text-botanical-950 font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium text-botanical-900 mb-1">
+                      Low Stock Threshold *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      min={0}
+                      value={editingProduct.low_stock_threshold}
+                      onChange={(e) => {
+                        setEditingProduct({
+                          ...editingProduct,
+                          low_stock_threshold: Math.max(0, parseInt(e.target.value, 10) || 0),
+                        });
+                        setIsDirty(true);
+                      }}
+                      className="w-full bg-white border border-botanical-300 rounded-xl px-3 py-2 font-mono text-botanical-950"
+                    />
+                  </div>
+                </div>
+
+                {/* Dynamic Status Preview */}
+                <div className="pt-2 flex items-center justify-between text-xs border-t border-botanical-200">
+                  <span className="text-charcoal-muted">Computed Stock Rule:</span>
+                  <div>
+                    {editingProduct.stock_quantity === 0 ? (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-100 text-red-800 font-bold text-[11px]">
+                        <AlertTriangle className="w-3.5 h-3.5" /> Out of Stock (Sold Out on Storefront)
+                      </span>
+                    ) : editingProduct.stock_quantity <= editingProduct.low_stock_threshold ? (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-[11px]">
+                        <AlertCircle className="w-3.5 h-3.5" /> Low Stock Warning Triggered
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[11px]">
+                        <Check className="w-3.5 h-3.5" /> Adequate Stock Inventory
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Botanical Form Factors */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    Caudex Circumference
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.caudex_size || ""}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, caudex_size: e.target.value });
+                      setIsDirty(true);
+                    }}
+                    placeholder="e.g. 18cm girth"
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-3 py-2"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    Plant Age
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.plant_age || ""}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, plant_age: e.target.value });
+                      setIsDirty(true);
+                    }}
+                    placeholder="e.g. 3 Years"
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-3 py-2"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    Pot Size / Root Packing
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.pot_size || ""}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, pot_size: e.target.value });
+                      setIsDirty(true);
+                    }}
+                    placeholder="e.g. 8-inch Nursery Pot"
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-3 py-2"
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block font-medium text-botanical-900 mb-1">
+                  Botanical Description & Provenance *
+                </label>
+                <textarea
+                  rows={3}
+                  required
+                  value={editingProduct.description || ""}
+                  onChange={(e) => {
+                    setEditingProduct({ ...editingProduct, description: e.target.value });
+                    setIsDirty(true);
+                  }}
+                  className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5 text-botanical-950"
+                />
+              </div>
+
+              {/* Integrated Image & Media Manager */}
+              <div className="pt-2">
+                <ImageUploadManager
+                  images={editingProduct.images || []}
+                  onChange={(imgs: ProductImage[]) => {
+                    setEditingProduct({ ...editingProduct, images: imgs });
+                    setIsDirty(true);
+                  }}
+                  label="Product Photographs & Specimen Gallery"
+                  helperText="Upload or paste photos of this specimen. Select the primary photo that appears on storefront catalog cards."
+                />
+              </div>
+
+              {/* Toggles */}
+              <div className="flex flex-wrap items-center gap-6 pt-2 border-t border-botanical-100">
+                <label className="flex items-center gap-2 cursor-pointer font-medium text-botanical-900">
+                  <input
+                    type="checkbox"
+                    checked={editingProduct.is_published}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, is_published: e.target.checked });
+                      setIsDirty(true);
+                    }}
+                    className="w-4 h-4 rounded text-clay"
+                  />
+                  <span>Active & Published on Public Storefront</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer font-medium text-botanical-900">
+                  <input
+                    type="checkbox"
+                    checked={editingProduct.is_featured}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, is_featured: e.target.checked });
+                      setIsDirty(true);
+                    }}
+                    className="w-4 h-4 rounded text-clay"
+                  />
+                  <span>Featured on Homepage Showcase</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer font-medium text-botanical-900">
+                  <input
+                    type="checkbox"
+                    checked={editingProduct.is_grafted}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, is_grafted: e.target.checked });
+                      setIsDirty(true);
+                    }}
+                    className="w-4 h-4 rounded text-clay"
+                  />
+                  <span>Grafted Scion</span>
+                </label>
+              </div>
+
+              {/* Modal Action Buttons */}
+              <div className="pt-4 border-t border-botanical-100 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="px-5 py-2.5 rounded-xl border border-botanical-300 text-botanical-700 hover:bg-botanical-50 transition-colors font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="px-7 py-2.5 rounded-xl bg-botanical-900 text-ivory font-semibold hover:bg-botanical-950 shadow-card flex items-center gap-2 disabled:opacity-50 transition-colors"
+                >
+                  {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                  <span>Save Inventory Changes</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
