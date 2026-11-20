@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { createClient } from "@supabase/supabase-js";
+import { supabaseAdmin } from "@/lib/supabase/server";
 
 const BUCKET_NAME = "product-media";
 
@@ -22,19 +22,13 @@ export interface StoredMediaFile {
   isCloudStorage: boolean;
 }
 
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  // Use service role key if available for administrative storage bypass, otherwise anon key
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (supabaseUrl && supabaseKey && supabaseUrl.trim() !== "" && supabaseKey.trim() !== "") {
-    return createClient(supabaseUrl, supabaseKey);
-  }
-  return null;
-}
-
+/**
+ * Checks if cloud storage credentials are configured.
+ */
 export function isCloudStorageConfigured(): boolean {
-  return getSupabaseClient() !== null;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return Boolean(url && key && key.trim() !== "" && key !== '""' && key !== "''");
 }
 
 /**
@@ -62,11 +56,9 @@ export async function uploadMediaFile(
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  const supabase = getSupabaseClient();
-
-  if (supabase) {
-    // Cloud storage path in Supabase
-    const { data, error } = await supabase.storage
+  if (isCloudStorageConfigured()) {
+    // Cloud storage path in Supabase via supabaseAdmin
+    const { data, error } = await supabaseAdmin.storage
       .from(BUCKET_NAME)
       .upload(filename, buffer, {
         contentType: mimeType,
@@ -78,7 +70,7 @@ export async function uploadMediaFile(
       throw new Error(`Supabase Storage upload error: ${error.message}`);
     }
 
-    const { data: publicUrlData } = supabase.storage
+    const { data: publicUrlData } = supabaseAdmin.storage
       .from(BUCKET_NAME)
       .getPublicUrl(filename);
 
@@ -113,10 +105,8 @@ export async function uploadMediaFile(
  * Lists all uploaded media files from either Supabase Storage or local directory.
  */
 export async function listMediaFiles(): Promise<StoredMediaFile[]> {
-  const supabase = getSupabaseClient();
-
-  if (supabase) {
-    const { data, error } = await supabase.storage.from(BUCKET_NAME).list("", {
+  if (isCloudStorageConfigured()) {
+    const { data, error } = await supabaseAdmin.storage.from(BUCKET_NAME).list("", {
       limit: 100,
       sortBy: { column: "created_at", order: "desc" },
     });
@@ -129,7 +119,7 @@ export async function listMediaFiles(): Promise<StoredMediaFile[]> {
     return (data || [])
       .filter((item) => !item.name.startsWith("."))
       .map((item) => {
-        const { data: urlData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(item.name);
+        const { data: urlData } = supabaseAdmin.storage.from(BUCKET_NAME).getPublicUrl(item.name);
         return {
           filename: item.name,
           url: urlData.publicUrl,
@@ -168,10 +158,9 @@ export async function listMediaFiles(): Promise<StoredMediaFile[]> {
  */
 export async function deleteMediaFile(filename: string): Promise<boolean> {
   const sanitized = path.basename(filename);
-  const supabase = getSupabaseClient();
 
-  if (supabase) {
-    const { error } = await supabase.storage.from(BUCKET_NAME).remove([sanitized]);
+  if (isCloudStorageConfigured()) {
+    const { error } = await supabaseAdmin.storage.from(BUCKET_NAME).remove([sanitized]);
     if (error) {
       console.error("[Storage] Failed to delete from Supabase:", error);
       return false;
@@ -188,4 +177,3 @@ export async function deleteMediaFile(filename: string): Promise<boolean> {
 
   return false;
 }
-
