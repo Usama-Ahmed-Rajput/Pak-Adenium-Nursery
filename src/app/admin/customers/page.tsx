@@ -12,14 +12,14 @@ export default async function AdminCustomersPage() {
   return (
     <div className="space-y-6">
       <div className="pb-4 border-b border-botanical-200">
-        <span className="text-xs uppercase tracking-widest text-clay font-medium">
-          Patron Directory
+        <span className="text-xs uppercase tracking-widest text-clay font-semibold">
+          Customer Directory
         </span>
-        <h1 className="font-serif text-2xl sm:text-3xl font-bold text-botanical-950 mt-1">
-          Collector & Customer Relations
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-botanical-950 mt-1">
+          Customer Management
         </h1>
         <p className="text-xs text-charcoal-muted mt-1">
-          Review Adenium enthusiasts across Pakistan, lifetime order volume, and reach buyers directly on WhatsApp.
+          Review customer profiles across Pakistan, order volume, and reach buyers directly on WhatsApp.
         </p>
       </div>
 

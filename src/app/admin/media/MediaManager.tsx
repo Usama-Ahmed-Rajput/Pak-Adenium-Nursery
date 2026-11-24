@@ -126,8 +126,8 @@ export default function MediaManager() {
         </div>
 
         <div>
-          <h3 className="font-serif text-base font-semibold text-botanical-950">
-            {isUploading ? "Uploading photographs..." : "Drop new botanical images here or browse files"}
+          <h3 className="text-base font-bold tracking-tight text-botanical-950">
+            {isUploading ? "Uploading photographs..." : "Drop new plant images here or browse files"}
           </h3>
           <p className="text-xs text-charcoal-muted mt-0.5">
             PNG, JPEG, WebP, AVIF up to 6MB. Images are saved permanently to the nursery storage.

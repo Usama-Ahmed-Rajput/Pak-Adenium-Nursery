@@ -88,7 +88,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
       category_id: firstCat?.id || "cat-grafted",
       category_name: firstCat?.name || "Grafted Varieties",
       species: "Adenium Obesum",
-      variety: "Hybrid Specimen",
+      variety: "Hybrid Variety",
       flower_color: "Multi-Petal Rose Pink",
       petal_type: "Triple Layer",
       price: 4500,
@@ -112,7 +112,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
           id: "img-" + Math.random().toString(36).substring(2, 7),
           image_url:
             "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=1200&auto=format&fit=crop",
-          alt_text: "Adenium flower specimen",
+          alt_text: "Adenium flower plant",
           is_primary: true,
           display_order: 1,
         },
@@ -132,7 +132,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
 
   const handleCancelModal = () => {
     if (isDirty) {
-      if (!confirm("Discard unsaved specimen changes?")) return;
+      if (!confirm("Discard unsaved product changes?")) return;
     }
     setIsModalOpen(false);
     setEditingProduct(null);
@@ -151,7 +151,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
       const data = await res.json();
       if (res.ok && data.success) {
         setProducts((prev) => prev.filter((p) => p.id !== deletingProduct.id));
-        showNotification(`Specimen "${deletingProduct.name}" removed from catalog.`, "success");
+        showNotification(`Product "${deletingProduct.name}" removed from catalog.`, "success");
         setDeletingProduct(null);
         router.refresh();
       } else {
@@ -191,7 +191,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
   const handleSaveSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProduct?.name || !editingProduct?.price) {
-      setFormError("Specimen name and price are required.");
+      setFormError("Product name and price are required.");
       return;
     }
 
@@ -223,7 +223,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
         return [saved, ...prev];
       });
 
-      showNotification(`Specimen "${saved.name}" saved successfully.`, "success");
+      showNotification(`Product "${saved.name}" saved successfully.`, "success");
       setIsModalOpen(false);
       setEditingProduct(null);
       setIsDirty(false);
@@ -301,7 +301,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
           onClick={handleOpenCreate}
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-botanical-900 hover:bg-botanical-950 text-ivory text-xs font-semibold shadow-card transition-colors flex-shrink-0"
         >
-          <Plus className="w-4 h-4" /> Add New Specimen
+          <Plus className="w-4 h-4" /> Add New Product
         </button>
       </div>
 
@@ -311,7 +311,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
           <table className="w-full text-left text-xs">
             <thead className="bg-botanical-50 border-b border-botanical-200 text-botanical-800">
               <tr>
-                <th className="py-3 px-4 font-semibold">Specimen</th>
+                <th className="py-3 px-4 font-semibold">Product</th>
                 <th className="py-3 px-4 font-semibold">Category</th>
                 <th className="py-3 px-4 font-semibold">Species & Variety</th>
                 <th className="py-3 px-4 font-semibold text-right">Price (PKR)</th>
@@ -400,14 +400,14 @@ export default function ProductManager({ initialProducts, categories }: ProductM
                       <button
                         onClick={() => handleOpenEdit(prod)}
                         className="p-1.5 rounded-lg text-clay hover:bg-clay/10 transition-colors"
-                        title="Edit Specimen"
+                        title="Edit Product"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setDeletingProduct(prod)}
                         className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
-                        title="Delete Specimen"
+                        title="Delete Product"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -419,7 +419,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={7} className="py-12 text-center text-charcoal-muted">
-                    <p className="font-medium text-sm">No specimens match your search or filter criteria.</p>
+                    <p className="font-medium text-sm">No products match your search or filter criteria.</p>
                   </td>
                 </tr>
               )}
@@ -442,8 +442,8 @@ export default function ProductManager({ initialProducts, categories }: ProductM
                 <Trash2 className="w-5 h-5 text-red-600" />
               </div>
               <div>
-                <h3 className="font-serif text-lg font-bold text-botanical-950">
-                  Delete Specimen?
+                <h3 className="text-lg font-bold tracking-tight text-botanical-950">
+                  Delete Product?
                 </h3>
                 <span className="text-xs text-charcoal-muted">This action is permanent and cannot be undone.</span>
               </div>
@@ -468,7 +468,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
                 className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-semibold shadow-sm flex items-center gap-1.5 disabled:opacity-50"
               >
                 {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                <span>Delete Specimen</span>
+                <span>Delete Product</span>
               </button>
             </div>
           </div>
@@ -489,8 +489,8 @@ export default function ProductManager({ initialProducts, categories }: ProductM
                 <span className="text-[10px] font-mono uppercase tracking-wider text-clay font-semibold">
                   Catalog Curator
                 </span>
-                <h2 className="font-serif text-xl sm:text-2xl font-bold text-botanical-950">
-                  {editingProduct.id ? "Edit Botanical Specimen" : "Add New Botanical Specimen"}
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-botanical-950">
+                  {editingProduct.id ? "Edit Product" : "Add New Product"}
                 </h2>
               </div>
               <button
@@ -512,7 +512,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
                   <label className="block font-medium text-botanical-900 mb-1">
-                    Specimen Name *
+                    Product Name *
                   </label>
                   <input
                     type="text"
@@ -844,7 +844,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
                   className="px-7 py-2.5 rounded-xl bg-botanical-900 text-ivory font-semibold hover:bg-botanical-950 shadow-card flex items-center gap-2 disabled:opacity-50 transition-colors"
                 >
                   {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                  <span>Save Specimen</span>
+                  <span>Save Product</span>
                 </button>
               </div>
             </form>

@@ -315,7 +315,7 @@ export default function OrderManager({ initialOrders, highlightId }: OrderManage
             <div className="flex items-center justify-between pb-4 border-b border-botanical-100">
               <div>
                 <span className="font-mono text-xs text-charcoal-muted">Customer Dispatch Console</span>
-                <h2 className="font-serif text-2xl font-bold text-botanical-950">
+                <h2 className="text-2xl font-bold tracking-tight text-botanical-950">
                   Order #{selectedOrder.order_number}
                 </h2>
                 <span className="text-[11px] text-charcoal-muted flex items-center gap-1 mt-0.5">
@@ -364,7 +364,7 @@ export default function OrderManager({ initialOrders, highlightId }: OrderManage
             {/* Ordered Line Items */}
             <div className="space-y-2">
               <span className="text-xs font-semibold text-botanical-900 uppercase tracking-wider block">
-                Ordered Specimens ({selectedOrder.items.length})
+                Ordered Items ({selectedOrder.items.length})
               </span>
               <div className="divide-y divide-botanical-100 border border-botanical-200 rounded-2xl overflow-hidden">
                 {selectedOrder.items.map((item) => (
@@ -399,7 +399,7 @@ export default function OrderManager({ initialOrders, highlightId }: OrderManage
 
             {/* Form to Update Status, Courier Tracking, and Internal Admin Notes */}
             <form onSubmit={handleSaveOrderChanges} className="p-4 rounded-2xl border border-botanical-200 space-y-4 bg-white text-xs">
-              <span className="font-serif text-sm font-semibold text-botanical-950 block">
+              <span className="text-sm font-semibold text-botanical-950 block">
                 Fulfillment Controls & Dispatch Record
               </span>
 

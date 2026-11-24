@@ -83,7 +83,7 @@ export default function SettingsManager({ initialSettings }: { initialSettings: 
         <div className="flex items-center gap-2.5 pb-3 border-b border-botanical-100">
           <Building className="w-5 h-5 text-clay" />
           <div>
-            <h2 className="font-serif text-base font-bold text-botanical-950">
+            <h2 className="text-base font-bold tracking-tight text-botanical-950">
               Nursery Identity & Contact Channels
             </h2>
             <span className="text-charcoal-muted text-[11px]">Core brand information, WhatsApp desk, and dispatch grounds.</span>
@@ -194,7 +194,7 @@ export default function SettingsManager({ initialSettings }: { initialSettings: 
         <div className="flex items-center gap-2.5 pb-3 border-b border-botanical-100">
           <Sparkles className="w-5 h-5 text-clay" />
           <div>
-            <h2 className="font-serif text-base font-bold text-botanical-950">
+            <h2 className="text-base font-bold tracking-tight text-botanical-950">
               Homepage Content & Editorial Hero
             </h2>
             <span className="text-charcoal-muted text-[11px]">Customize headlines, value propositions, and calls to action.</span>
@@ -216,7 +216,7 @@ export default function SettingsManager({ initialSettings }: { initialSettings: 
                   homepage: { ...settings.homepage, hero_headline: e.target.value },
                 })
               }
-              className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5 font-serif text-sm font-semibold text-botanical-950"
+              className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5 text-sm font-semibold text-botanical-950"
             />
           </div>
 
@@ -305,7 +305,7 @@ export default function SettingsManager({ initialSettings }: { initialSettings: 
         <div className="flex items-center gap-2.5 pb-3 border-b border-botanical-100">
           <Search className="w-5 h-5 text-clay" />
           <div>
-            <h2 className="font-serif text-base font-bold text-botanical-950">
+            <h2 className="text-base font-bold tracking-tight text-botanical-950">
               SEO & Search Engine Indexing
             </h2>
             <span className="text-charcoal-muted text-[11px]">Control public search title tags, meta descriptions, and social graph cards.</span>
@@ -371,7 +371,7 @@ export default function SettingsManager({ initialSettings }: { initialSettings: 
         <div className="flex items-center gap-2.5 pb-3 border-b border-botanical-100">
           <Truck className="w-5 h-5 text-clay" />
           <div>
-            <h2 className="font-serif text-base font-bold text-botanical-950">
+            <h2 className="text-base font-bold tracking-tight text-botanical-950">
               Pakistan Shipping & Delivery Policy
             </h2>
             <span className="text-charcoal-muted text-[11px]">Courier rates, threshold for free live delivery, and dispatch schedule.</span>
@@ -448,7 +448,7 @@ export default function SettingsManager({ initialSettings }: { initialSettings: 
         <div className="flex items-center gap-2.5 pb-3 border-b border-botanical-100">
           <CreditCard className="w-5 h-5 text-clay" />
           <div>
-            <h2 className="font-serif text-base font-bold text-botanical-950">
+            <h2 className="text-base font-bold tracking-tight text-botanical-950">
               Payment Methods & Bank Accounts
             </h2>
             <span className="text-charcoal-muted text-[11px]">Configure payment options presented to customers during checkout.</span>
@@ -577,7 +577,7 @@ export default function SettingsManager({ initialSettings }: { initialSettings: 
         <div className="flex items-center justify-between pb-3 border-b border-botanical-100">
           <div className="flex items-center gap-2.5">
             <Megaphone className="w-5 h-5 text-clay" />
-            <h2 className="font-serif text-base font-bold text-botanical-950">
+            <h2 className="text-base font-bold tracking-tight text-botanical-950">
               Top Announcement Strip
             </h2>
           </div>
@@ -672,7 +672,7 @@ export default function SettingsManager({ initialSettings }: { initialSettings: 
       <div className="rounded-3xl bg-white border border-botanical-200 p-6 sm:p-8 shadow-subtle space-y-4">
         <div className="flex items-center gap-2.5 pb-3 border-b border-botanical-100">
           <Share2 className="w-5 h-5 text-clay" />
-          <h2 className="font-serif text-base font-bold text-botanical-950">
+          <h2 className="text-base font-bold tracking-tight text-botanical-950">
             Social Media Channels
           </h2>
         </div>

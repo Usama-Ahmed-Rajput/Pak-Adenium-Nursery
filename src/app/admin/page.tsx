@@ -25,10 +25,10 @@ export default async function AdminDashboardOverview() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-botanical-200">
         <div>
-          <span className="text-xs uppercase tracking-widest text-clay font-medium">
+          <span className="text-xs uppercase tracking-widest text-clay font-semibold">
             Nursery Management Console
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-botanical-950 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-botanical-950 mt-1">
             Dashboard Overview
           </h1>
         </div>
@@ -38,7 +38,7 @@ export default async function AdminDashboardOverview() {
             href="/admin/products"
             className="px-4 py-2 rounded-xl bg-botanical-900 hover:bg-botanical-950 text-ivory text-xs font-semibold shadow-subtle transition-colors"
           >
-            + Add Specimen
+            + Add Product
           </Link>
           <Link
             href="/admin/orders"
@@ -113,7 +113,7 @@ export default async function AdminDashboardOverview() {
           className="p-4 rounded-2xl bg-white border border-botanical-200/80 shadow-subtle space-y-1.5 hover:border-botanical-400 transition-colors block"
         >
           <div className="flex items-center justify-between text-charcoal-muted">
-            <span className="text-[11px] font-medium uppercase tracking-wider">Patrons</span>
+            <span className="text-[11px] font-medium uppercase tracking-wider">Customers</span>
             <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center">
               <ExternalLink className="w-3.5 h-3.5" />
             </div>
@@ -149,7 +149,7 @@ export default async function AdminDashboardOverview() {
         {/* Recent Orders Feed */}
         <div className="lg:col-span-8 rounded-2xl bg-white border border-botanical-200/80 p-6 shadow-subtle space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-botanical-100">
-            <h2 className="font-serif text-lg font-medium text-botanical-950">
+            <h2 className="text-base sm:text-lg font-bold tracking-tight text-botanical-950">
               Recent Customer Orders
             </h2>
             <Link
@@ -222,7 +222,7 @@ export default async function AdminDashboardOverview() {
         {/* Low Stock Watchlist */}
         <div className="lg:col-span-4 rounded-2xl bg-white border border-botanical-200/80 p-6 shadow-subtle space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-botanical-100">
-            <h2 className="font-serif text-lg font-medium text-botanical-950 flex items-center gap-2">
+            <h2 className="text-base sm:text-lg font-bold tracking-tight text-botanical-950 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-red-600" />
               Stock Alerts
             </h2>
@@ -260,7 +260,7 @@ export default async function AdminDashboardOverview() {
 
             {metrics.outOfStockProducts.length === 0 && metrics.lowStockProducts.length === 0 && (
               <p className="py-6 text-center text-xs text-charcoal-muted">
-                All catalog specimens have healthy inventory levels.
+                All catalog products have healthy inventory levels.
               </p>
             )}
           </div>

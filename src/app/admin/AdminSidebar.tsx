@@ -32,7 +32,7 @@ export default function AdminSidebar({ userEmail }: { userEmail: string }) {
     { label: "Inventory Levels", href: "/admin/inventory", icon: Layers },
     { label: "Customer Orders", href: "/admin/orders", icon: ShoppingBag },
     { label: "Categories", href: "/admin/categories", icon: FolderTree },
-    { label: "Patrons & Customers", href: "/admin/customers", icon: Users },
+    { label: "Customers", href: "/admin/customers", icon: Users },
     { label: "Media Library", href: "/admin/media", icon: ImageIcon },
     { label: "Growing Journal", href: "/admin/journal", icon: BookOpen },
     { label: "Nursery Settings", href: "/admin/settings", icon: Settings },
@@ -54,10 +54,10 @@ export default function AdminSidebar({ userEmail }: { userEmail: string }) {
       {/* Mobile Top Header */}
       <div className="lg:hidden bg-botanical-950 text-ivory p-4 flex items-center justify-between border-b border-botanical-800">
         <Link href="/admin" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-ivory text-botanical-950 flex items-center justify-center font-serif font-bold text-sm">
+          <div className="w-7 h-7 rounded-full bg-ivory text-botanical-950 flex items-center justify-center font-bold text-sm">
             P
           </div>
-          <span className="font-serif font-semibold text-base">Pak Adenium Admin</span>
+          <span className="font-bold text-base tracking-tight">Pak Adenium Admin</span>
         </Link>
         <button
           onClick={() => setMobileOpen(true)}
@@ -76,11 +76,11 @@ export default function AdminSidebar({ userEmail }: { userEmail: string }) {
         <div className="p-6 space-y-8">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-ivory text-botanical-950 flex items-center justify-center font-serif font-bold text-base">
+              <div className="w-8 h-8 rounded-full bg-ivory text-botanical-950 flex items-center justify-center font-bold text-base">
                 P
               </div>
               <div>
-                <span className="font-serif text-lg font-bold text-ivory block leading-none">
+                <span className="text-lg font-bold text-ivory block leading-none tracking-tight">
                   Pak Adenium
                 </span>
                 <span className="text-[9px] uppercase tracking-widest text-clay font-medium">

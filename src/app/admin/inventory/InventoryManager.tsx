@@ -138,7 +138,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
     if (!editingProduct) return;
 
     if (!editingProduct.name.trim()) {
-      setFormError("Specimen name is required.");
+      setFormError("Product name is required.");
       return;
     }
     if (editingProduct.price <= 0) {
@@ -162,7 +162,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        setFormError(data.error || "Failed to persist specimen changes.");
+        setFormError(data.error || "Failed to persist product changes.");
         setIsSaving(false);
         return;
       }
@@ -178,7 +178,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
         return [saved, ...prev];
       });
 
-      showNotification(`Specimen "${saved.name}" saved and synced successfully.`, "success");
+      showNotification(`Product "${saved.name}" saved and synced successfully.`, "success");
       setIsModalOpen(false);
       setEditingProduct(null);
       setIsDirty(false);
@@ -224,7 +224,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
           <span className="text-xl font-bold font-mono text-botanical-950 mt-1 block">
             {totalItems}
           </span>
-          <span className="text-[10px] text-charcoal-muted">Specimens tracked</span>
+          <span className="text-[10px] text-charcoal-muted">Products tracked</span>
         </div>
 
         <div
@@ -280,7 +280,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
           <div className="relative flex-1">
             <input
               type="text"
-              placeholder="Filter by specimen name, SKU, variety..."
+              placeholder="Filter by product name, SKU, variety..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-ivory border border-botanical-300 rounded-xl pl-9 pr-4 py-2 text-xs text-botanical-950 focus:outline-none focus:border-botanical-700"
@@ -316,7 +316,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
         </div>
 
         <div className="text-xs text-charcoal-muted self-end lg:self-center">
-          Showing <span className="font-semibold text-botanical-950">{filtered.length}</span> specimens
+          Showing <span className="font-semibold text-botanical-950">{filtered.length}</span> products
         </div>
       </div>
 
@@ -326,7 +326,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
           <table className="w-full text-left text-xs">
             <thead className="bg-botanical-50 border-b border-botanical-200 text-botanical-800">
               <tr>
-                <th className="py-3 px-4 font-semibold">Specimen Variety</th>
+                <th className="py-3 px-4 font-semibold">Product &amp; Variety</th>
                 <th className="py-3 px-4 font-semibold">Category</th>
                 <th className="py-3 px-4 font-semibold">SKU</th>
                 <th className="py-3 px-4 font-semibold text-right">Unit Price</th>
@@ -448,7 +448,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
                           type="button"
                           onClick={() => handleOpenEdit(prod)}
                           className="px-3 py-1.5 rounded-lg bg-botanical-900 hover:bg-botanical-950 text-ivory text-xs font-semibold inline-flex items-center gap-1.5 shadow-subtle transition-colors"
-                          title="Edit specimen details and inventory levels"
+                          title="Edit product details and inventory levels"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                           <span>Edit</span>
@@ -462,7 +462,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={8} className="py-12 text-center text-charcoal-muted">
-                    <p className="font-medium text-sm">No specimens match your search or filter criteria.</p>
+                    <p className="font-medium text-sm">No products match your search or filter criteria.</p>
                     <p className="text-[11px] mt-1">Try resetting the category or stock status filters.</p>
                   </td>
                 </tr>
@@ -485,9 +485,9 @@ export default function InventoryManager({ initialProducts, categories }: Invent
             <div className="flex items-center justify-between pb-4 border-b border-botanical-100">
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-clay font-semibold">
-                  Inventory & Specimen Editor
+                  Inventory &amp; Product Editor
                 </span>
-                <h2 className="font-serif text-xl sm:text-2xl font-bold text-botanical-950">
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-botanical-950">
                   Edit: {editingProduct.name}
                 </h2>
               </div>
@@ -512,7 +512,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="sm:col-span-2">
                   <label className="block font-medium text-botanical-900 mb-1">
-                    Specimen Name *
+                    Product Name *
                   </label>
                   <input
                     type="text"
@@ -601,7 +601,7 @@ export default function InventoryManager({ initialProducts, categories }: Invent
 
               {/* Pricing & Stock Management Section */}
               <div className="p-4 rounded-2xl bg-ivory/80 border border-botanical-200 space-y-4">
-                <span className="font-serif text-sm font-semibold text-botanical-950 block">
+                <span className="text-sm font-semibold text-botanical-950 block">
                   Stock Safeguards & Pricing (PKR)
                 </span>
 
@@ -781,8 +781,8 @@ export default function InventoryManager({ initialProducts, categories }: Invent
                     setEditingProduct({ ...editingProduct, images: imgs });
                     setIsDirty(true);
                   }}
-                  label="Product Photographs & Specimen Gallery"
-                  helperText="Upload or paste photos of this specimen. Select the primary photo that appears on storefront catalog cards."
+                  label="Product Photographs & Image Gallery"
+                  helperText="Upload or paste photos of this product. Select the primary photo that appears on storefront catalog cards."
                 />
               </div>
 

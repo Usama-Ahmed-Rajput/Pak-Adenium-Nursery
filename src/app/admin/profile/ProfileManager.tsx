@@ -70,11 +70,11 @@ export default function ProfileManager({ user }: { user: AdminUser }) {
       {/* Profile Card */}
       <div className="bg-white rounded-3xl border border-botanical-200 p-6 sm:p-8 shadow-subtle space-y-6">
         <div className="flex items-center gap-4 pb-4 border-b border-botanical-100">
-          <div className="w-14 h-14 rounded-2xl bg-botanical-900 text-ivory flex items-center justify-center font-serif text-2xl font-bold">
+          <div className="w-14 h-14 rounded-2xl bg-botanical-900 text-ivory flex items-center justify-center text-2xl font-bold">
             {user.name.charAt(0)}
           </div>
           <div>
-            <h2 className="font-serif text-lg sm:text-xl font-bold text-botanical-950">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-botanical-950">
               {user.name}
             </h2>
             <div className="flex items-center gap-2 mt-0.5">
@@ -130,7 +130,7 @@ export default function ProfileManager({ user }: { user: AdminUser }) {
 
       {/* Security Info Card */}
       <div className="bg-white rounded-3xl border border-botanical-200 p-6 sm:p-8 shadow-subtle space-y-4">
-        <h3 className="font-serif text-base font-semibold text-botanical-950 flex items-center gap-2">
+        <h3 className="text-base font-bold tracking-tight text-botanical-950 flex items-center gap-2">
           <Shield className="w-4 h-4 text-emerald-700" />
           <span>Active Session Protection</span>
         </h3>

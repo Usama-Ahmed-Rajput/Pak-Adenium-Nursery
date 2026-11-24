@@ -12,14 +12,14 @@ export default async function AdminJournalPage() {
   return (
     <div className="space-y-6">
       <div className="pb-4 border-b border-botanical-200">
-        <span className="text-xs uppercase tracking-widest text-clay font-medium">
+        <span className="text-xs uppercase tracking-widest text-clay font-semibold">
           Editorial & Care Education
         </span>
-        <h1 className="font-serif text-2xl sm:text-3xl font-bold text-botanical-950 mt-1">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-botanical-950 mt-1">
           The Growing Journal Editor
         </h1>
         <p className="text-xs text-charcoal-muted mt-1">
-          Publish guides, winter dormancy alerts, and caudex training articles for your collectors.
+          Publish guides, seasonal care tips, and training articles for your customers.
         </p>
       </div>
 

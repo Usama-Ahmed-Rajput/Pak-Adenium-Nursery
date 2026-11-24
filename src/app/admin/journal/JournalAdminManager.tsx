@@ -164,7 +164,7 @@ export default function JournalAdminManager({ initialArticles }: { initialArticl
               <span className="text-[10px] uppercase tracking-wider font-semibold text-clay px-2 py-0.5 rounded bg-clay/10 inline-block">
                 {art.category}
               </span>
-              <h3 className="font-serif text-lg font-bold text-botanical-950 line-clamp-2">{art.title}</h3>
+              <h3 className="text-lg font-bold tracking-tight text-botanical-950 line-clamp-2">{art.title}</h3>
               <p className="text-xs text-charcoal-muted line-clamp-2 leading-relaxed">{art.excerpt}</p>
             </div>
 
@@ -209,8 +209,8 @@ export default function JournalAdminManager({ initialArticles }: { initialArticl
 
           <div className="relative w-full max-w-2xl bg-white rounded-3xl border border-botanical-200 shadow-2xl p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-botanical-100">
-              <h3 className="font-serif text-lg font-bold text-botanical-950">
-                {editingArticle.id ? "Edit Botanical Care Guide" : "Write New Care Guide"}
+              <h3 className="text-lg font-bold tracking-tight text-botanical-950">
+                {editingArticle.id ? "Edit Care Guide" : "Write New Care Guide"}
               </h3>
               <button onClick={() => setIsModalOpen(false)} className="p-1 text-botanical-400 hover:text-botanical-950">
                 <X className="w-5 h-5" />

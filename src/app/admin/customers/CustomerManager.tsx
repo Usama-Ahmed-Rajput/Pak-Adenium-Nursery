@@ -44,7 +44,7 @@ export default function CustomerManager({ initialCustomers }: CustomerManagerPro
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="p-5 rounded-2xl bg-white border border-botanical-200 shadow-subtle space-y-1">
           <div className="flex items-center justify-between text-charcoal-muted">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Patrons</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">Total Customers</span>
             <div className="w-8 h-8 rounded-lg bg-botanical-100 text-botanical-800 flex items-center justify-center">
               <Users className="w-4 h-4" />
             </div>
@@ -90,7 +90,7 @@ export default function CustomerManager({ initialCustomers }: CustomerManagerPro
         </div>
 
         <div className="text-xs text-charcoal-muted">
-          Showing <span className="font-semibold text-botanical-950">{filtered.length}</span> of {customers.length} patrons
+          Showing <span className="font-semibold text-botanical-950">{filtered.length}</span> of {customers.length} customers
         </div>
       </div>
 
@@ -100,7 +100,7 @@ export default function CustomerManager({ initialCustomers }: CustomerManagerPro
           <table className="w-full text-left text-xs">
             <thead className="bg-botanical-50 border-b border-botanical-200 text-botanical-800">
               <tr>
-                <th className="py-3 px-4 font-semibold">Collector Name</th>
+                <th className="py-3 px-4 font-semibold">Customer Name</th>
                 <th className="py-3 px-4 font-semibold">Contact Details</th>
                 <th className="py-3 px-4 font-semibold">Location</th>
                 <th className="py-3 px-4 font-semibold text-center">Orders</th>

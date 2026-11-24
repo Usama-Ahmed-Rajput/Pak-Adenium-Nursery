@@ -171,11 +171,11 @@ export default function CategoryManager({ initialCategories }: { initialCategori
               </div>
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h3 className="font-serif text-lg font-bold text-botanical-950">{c.name}</h3>
+                  <h3 className="text-lg font-bold tracking-tight text-botanical-950">{c.name}</h3>
                   <span className="font-mono text-[11px] text-charcoal-muted">slug: {c.slug}</span>
                 </div>
                 <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-botanical-100 text-botanical-900 flex-shrink-0">
-                  {c.product_count ?? 0} specimens
+                  {c.product_count ?? 0} products
                 </span>
               </div>
               <p className="text-xs text-charcoal-muted line-clamp-2 leading-relaxed">{c.description}</p>
@@ -222,7 +222,7 @@ export default function CategoryManager({ initialCategories }: { initialCategori
 
           <div className="relative w-full max-w-lg bg-white rounded-3xl border border-botanical-200 shadow-2xl p-6 space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-botanical-100">
-              <h3 className="font-serif text-lg font-bold text-botanical-950">
+              <h3 className="text-lg font-bold tracking-tight text-botanical-950">
                 {editingCategory.id ? "Edit Category" : "Add New Category"}
               </h3>
               <button onClick={() => setIsModalOpen(false)} className="p-1 text-botanical-400 hover:text-botanical-950">

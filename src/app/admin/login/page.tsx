@@ -43,14 +43,14 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-ivory-sand/40 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
         <Link href="/" className="inline-flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-full bg-botanical-900 text-ivory flex items-center justify-center font-serif font-bold text-xl">
+          <div className="w-10 h-10 rounded-full bg-botanical-900 text-ivory flex items-center justify-center font-bold text-xl">
             P
           </div>
-          <span className="font-serif text-2xl font-bold tracking-tight text-botanical-950">
+          <span className="text-2xl font-bold tracking-tight text-botanical-950">
             Pak Adenium
           </span>
         </Link>
-        <h2 className="font-serif text-xl sm:text-2xl font-medium text-botanical-950">
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-botanical-950">
           Nursery Staff & Admin Portal
         </h2>
         <p className="text-xs text-charcoal-muted">
