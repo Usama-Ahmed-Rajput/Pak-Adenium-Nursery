@@ -49,7 +49,7 @@ export function buildProductInquiryWhatsApp(
   const message = [
     `Hello Pak Adenium Nursery,`,
     ``,
-    `I am inquiring about this specimen plant from your catalog:`,
+    `I am inquiring about this plant from your catalog:`,
     `🌿 *${product.name}*`,
     `• SKU: ${product.sku}`,
     `• Species: ${product.species}`,

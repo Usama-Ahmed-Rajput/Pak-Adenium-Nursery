@@ -124,13 +124,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           {!isLoading && query && results.length === 0 && (
             <div className="py-12 text-center">
               <p className="text-sm text-botanical-900 font-medium mb-1">
-                No matching specimens found for &ldquo;{query}&rdquo;
+                No matching plants found for &ldquo;{query}&rdquo;
               </p>
               <p className="text-xs text-charcoal-muted max-w-sm mx-auto mb-4">
-                Looking for a specific collector hybrid or custom graft? Inquire directly with our horticulturist on WhatsApp.
+                Looking for a specific collector hybrid or custom graft? Inquire directly with our nursery team on WhatsApp.
               </p>
               <a
-                href={`https://wa.me/923001234567?text=${encodeURIComponent(`Assalam-o-Alaikum, I am searching for ${query} at Pak Adenium Nursery.`)}`}
+                href={`https://wa.me/923001234567?text=${encodeURIComponent(`Hello, I am searching for ${query} at Pak Adenium Nursery.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-medium text-clay hover:underline"

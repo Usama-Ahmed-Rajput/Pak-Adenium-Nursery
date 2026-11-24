@@ -148,7 +148,7 @@ export default async function OrderSuccessPage({ searchParams }: SuccessPageProp
               <table className="w-full text-left text-xs">
                 <thead className="bg-botanical-50 border-b border-botanical-200 text-botanical-800">
                   <tr>
-                    <th className="py-3 px-4 font-semibold">Specimen Variety</th>
+                    <th className="py-3 px-4 font-semibold">Product &amp; Variety</th>
                     <th className="py-3 px-4 font-semibold">SKU</th>
                     <th className="py-3 px-4 font-semibold text-right">Unit Price</th>
                     <th className="py-3 px-4 font-semibold text-center">Qty</th>

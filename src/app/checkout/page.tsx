@@ -142,7 +142,7 @@ export default function CheckoutPage() {
         <main className="flex-1 bg-ivory py-16 text-center">
           <div className="max-w-md mx-auto px-4 space-y-4">
             <h1 className="font-serif text-3xl font-medium text-botanical-950">
-              No Specimens to Checkout
+              No Plants in Cart
             </h1>
             <p className="text-sm text-charcoal-muted">
               Your bag is currently empty. Please explore our catalog to select plants.
@@ -461,7 +461,7 @@ export default function CheckoutPage() {
             <div className="lg:col-span-5 space-y-4">
               <div className="rounded-2xl bg-white border border-botanical-200/80 p-6 shadow-subtle space-y-5 sticky top-24">
                 <h2 className="font-serif text-lg font-medium text-botanical-950 pb-3 border-b border-botanical-100">
-                  Specimens in Order ({items.length})
+                  Plants in Order ({items.length})
                 </h2>
 
                 <div className="max-h-60 overflow-y-auto divide-y divide-botanical-100 pr-1">
@@ -531,7 +531,7 @@ export default function CheckoutPage() {
                 </button>
 
                 <p className="text-center text-[11px] text-charcoal-muted">
-                  Your specimens are inspected and packed under breathable foam cradles before dispatch.
+                  Your plants are inspected and packed under breathable foam cradles before dispatch.
                 </p>
               </div>
             </div>

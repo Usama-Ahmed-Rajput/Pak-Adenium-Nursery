@@ -80,7 +80,7 @@ export default function Navbar({
     {
       name: "All Plants & Collections",
       href: "/shop",
-      description: "Browse our complete catalog of hand-raised specimens",
+      description: "Browse our complete catalog of hand-raised plants",
       isAll: true,
     },
     {
@@ -91,10 +91,10 @@ export default function Navbar({
     {
       name: "Desert Rose Bonsai",
       href: "/shop?category=adenium-arabicum",
-      description: "Sculptural wide-base specimen trees with thick trunks",
+      description: "Sculptural wide-base Desert Rose trees with thick trunks",
     },
     {
-      name: "Specimen Bonsai Trays",
+      name: "Mature Bonsai Trays",
       href: "/shop?category=specimen-bonsai",
       description: "Mature 4 to 8-year root-trained trees in artisan clay pots",
     },

@@ -165,7 +165,7 @@ export default async function OrderLookupPage({ searchParams }: OrderLookupProps
                     </span>
                     <a
                       href={`https://wa.me/${settings.general.whatsapp}?text=${encodeURIComponent(
-                        `Assalam-o-Alaikum, I am inquiring about Order #${order.order_number}.`
+                        `Hello, I am inquiring about Order #${order.order_number}.`
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"

@@ -33,7 +33,7 @@ export default function BotanicalStorySection({
               <div className="absolute bottom-4 left-4 right-4 p-4 rounded-md bg-white/95 backdrop-blur-sm border border-[#E5E0D8] flex items-center justify-between text-xs">
                 <div>
                   <span className="text-[11px] uppercase tracking-wider text-clay block font-semibold">
-                    Desert Rose Specimen
+                    Desert Rose Bonsai
                   </span>
                   <span className="font-sans text-sm font-semibold text-[#15271E]">
                     5-Year Root-Trained Bonsai

@@ -101,22 +101,22 @@ const QUESTIONS: Question[] = [
   },
   {
     id: "budget",
-    title: "What is your preferred specimen investment range?",
-    subtitle: "Prices reflect plant age, graft complexity, and caudex girth.",
+    title: "What is your preferred budget range?",
+    subtitle: "Prices reflect plant age, flower variety, and base trunk thickness.",
     options: [
       {
         label: "Under Rs. 3,000",
-        description: "Fresh seeds, mineral substrates, and young starter plants.",
+        description: "Fresh seeds, mineral potting mix, and young starter plants.",
         value: "budget_starter",
       },
       {
         label: "Rs. 4,000 — Rs. 8,000",
-        description: "Mature 2-3 year flowering grafted varieties and compact specimens.",
+        description: "Mature 2-3 year flowering grafted varieties and compact bonsai.",
         value: "budget_mid",
       },
       {
         label: "Rs. 9,000 — Rs. 25,000+",
-        description: "Rare 3-6 year collector specimens, Dorset Horn, and master bonsai trays.",
+        description: "Rare 3-6 year collector plants and master bonsai trays.",
         value: "budget_specimen",
       },
     ],
@@ -321,7 +321,7 @@ export default function PlantFinderPage() {
                     Tailored Matching Complete
                   </span>
                   <h2 className="font-serif text-2xl font-medium text-botanical-950 mt-1">
-                    Your Curated Specimen Matches
+                    Your Curated Plant Matches
                   </h2>
                   <p className="text-xs text-charcoal-muted mt-1">
                     Based on your preferences for {answers.aesthetic} and {answers.location?.replace("_", " ")}.
@@ -348,14 +348,14 @@ export default function PlantFinderPage() {
               {/* WhatsApp Specialist Fallback */}
               <div className="rounded-2xl bg-white border border-botanical-200 p-6 text-center space-y-3">
                 <h3 className="font-serif text-lg font-medium text-botanical-950">
-                  Need a bespoke variety or personalized specimen video?
+                  Need a specific variety or personalized plant video?
                 </h3>
                 <p className="text-xs text-charcoal-muted max-w-md mx-auto">
-                  Our head propagator can film live plants on our nursery benches and guide your selection via WhatsApp.
+                  Our head grower can film live plants on our nursery benches and guide your selection via WhatsApp.
                 </p>
                 <a
                   href={`https://wa.me/923001234567?text=${encodeURIComponent(
-                    `Assalam-o-Alaikum Pak Adenium, I completed your Plant Finder quiz and would like personalized recommendations for: ${answers.aesthetic} in ${answers.location}.`
+                    `Hello Pak Adenium, I completed your Plant Finder quiz and would like personalized recommendations for: ${answers.aesthetic} in ${answers.location}.`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

@@ -38,7 +38,7 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
         />
         <div className="absolute top-4 left-4">
           <span className="px-3 py-1 rounded-full bg-ivory/90 backdrop-blur-sm text-[11px] font-mono uppercase tracking-wider text-botanical-900 border border-botanical-200">
-            Actual Nursery Specimen
+            Live Nursery Plant
           </span>
         </div>
       </div>

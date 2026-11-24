@@ -9,9 +9,9 @@ export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Botanical Specimen Catalog — Desert Roses & Adenium Bonsai",
+    title: "Desert Rose Plants & Bonsai Catalog — Pak Adenium Nursery",
     description:
-      "Explore hand-selected Adenium Obesum, Arabicum, grafted multi-petal varieties, and rare collector bonsai specimens in Pakistan. Nationwide live delivery.",
+      "Explore hand-selected Desert Rose plants, grafted multi-petal varieties, and rare collector bonsai in Pakistan. Nationwide live delivery.",
   };
 }
 

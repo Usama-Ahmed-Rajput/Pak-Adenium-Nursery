@@ -42,7 +42,7 @@ function mapProduct(row: any): Product {
     .map((img: any) => ({
       id: String(img.id),
       image_url: String(img.image_url || ""),
-      alt_text: String(img.alt_text || row.name || "Adenium specimen"),
+      alt_text: String(img.alt_text || row.name || "Desert Rose plant"),
       is_primary: Boolean(img.is_primary),
       display_order: Number(img.display_order ?? 0),
     }));
@@ -105,7 +105,7 @@ function mapOrderItem(item: any): OrderItem {
   return {
     id: String(item.id),
     product_id: String(item.product_id || ""),
-    product_name: String(item.product_name || "Botanical Specimen"),
+    product_name: String(item.product_name || "Desert Rose Plant"),
     product_sku: String(item.product_sku || ""),
     unit_price: Number(item.unit_price || 0),
     quantity: Number(item.quantity || 1),
@@ -349,7 +349,7 @@ export async function saveProduct(
     sku,
     category_id: product.category_id && isUuid(product.category_id) ? product.category_id : null,
     species: product.species || "Adenium Obesum",
-    variety: product.variety || "Hybrid Specimen",
+    variety: product.variety || "Hybrid Variety",
     flower_color: product.flower_color || "Rose Pink",
     petal_type: product.petal_type || "Single",
     price: Number(product.price),
@@ -366,7 +366,7 @@ export async function saveProduct(
     plant_age: product.plant_age || "2 Years",
     is_grafted: product.is_grafted ?? true,
     pot_size: product.pot_size || "8-inch Nursery Pot",
-    description: product.description || "Botanical specimen nurtured at Pak Adenium Nursery.",
+    description: product.description || "Desert Rose plant nurtured at Pak Adenium Nursery.",
     care_watering: product.care_watering || "Water when topsoil is completely dry.",
     care_sunlight: product.care_sunlight || "Full direct sun 6+ hours daily.",
     care_temperature: product.care_temperature || "25°C to 45°C. Protect from heavy winter frost.",

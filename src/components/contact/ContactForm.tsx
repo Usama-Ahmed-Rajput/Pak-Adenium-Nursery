@@ -125,7 +125,7 @@ export default function ContactForm() {
           type="text"
           value={formData.subject}
           onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-          placeholder="e.g. Inquiring about Dorset Horn specimens"
+          placeholder="e.g. Inquiring about Dorset Horn plants"
           className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5 text-xs text-botanical-950 focus:outline-none focus:border-botanical-600"
         />
       </div>

@@ -90,7 +90,7 @@ export default function ImageUploadManager({
     const newImage: ProductImage = {
       id: "img-" + Math.random().toString(36).substring(2, 8),
       image_url: urlInput.trim(),
-      alt_text: "Specimen photograph",
+      alt_text: "Product photograph",
       is_primary: isFirst,
       display_order: images.length + 1,
     };

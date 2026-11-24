@@ -262,12 +262,12 @@ export default function BotanicalVisualizer() {
         <div className="relative w-72 h-80 rounded-2xl overflow-hidden border border-botanical-300/30 shadow-card bg-ivory-sand/40">
           <img
             src="https://images.unsplash.com/photo-1509423350716-97f9360b4e09?q=80&w=800&auto=format&fit=crop"
-            alt="Mature Adenium Caudex Specimen"
+            alt="Mature Desert Rose Bonsai"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-botanical-900/70 via-transparent to-transparent flex items-end p-4">
             <span className="text-xs uppercase tracking-widest text-ivory/90 font-medium">
-              Adenium Arabicum Bonsai
+              Desert Rose Bonsai
             </span>
           </div>
         </div>
@@ -281,7 +281,7 @@ export default function BotanicalVisualizer() {
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none text-center">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-botanical-900/10 backdrop-blur-sm border border-botanical-900/15 text-[11px] uppercase tracking-wider text-botanical-900/80 font-medium">
           <span className="w-1.5 h-1.5 rounded-full bg-clay animate-pulse" />
-          Interactive 3D Botanical Specimen
+          Interactive 3D Plant Model
         </span>
       </div>
     </div>

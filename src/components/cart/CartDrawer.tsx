@@ -31,9 +31,9 @@ export default function CartDrawer() {
       .join("\n");
 
     const message = [
-      `Assalam-o-Alaikum Pak Adenium Nursery,`,
+      `Hello Pak Adenium Nursery,`,
       ``,
-      `I would like to place an order for the following specimens:`,
+      `I would like to place an order for the following plants:`,
       itemsSummary,
       ``,
       `Subtotal: ${formatPrice(subtotal)}`,

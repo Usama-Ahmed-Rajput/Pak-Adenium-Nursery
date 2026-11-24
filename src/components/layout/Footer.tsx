@@ -114,7 +114,7 @@ export default function Footer({
             </li>
             <li>
               <Link href="/shop?category=adenium-arabicum" className="hover:text-clay transition-colors">
-                Adenium Arabicum
+                Desert Rose Bonsai
               </Link>
             </li>
             <li>
@@ -124,7 +124,7 @@ export default function Footer({
             </li>
             <li>
               <Link href="/shop?category=specimen-bonsai" className="hover:text-clay transition-colors">
-                Trained Caudex Bonsai
+                Mature Bonsai Trees
               </Link>
             </li>
             <li>

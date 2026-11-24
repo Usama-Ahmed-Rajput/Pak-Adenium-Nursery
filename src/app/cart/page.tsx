@@ -139,7 +139,7 @@ export default function CartPage() {
 
                 <div className="flex justify-between items-center text-xs text-charcoal-muted px-2">
                   <Link href="/shop" className="hover:text-botanical-900 inline-flex items-center gap-1 font-medium">
-                    ← Continue discovering specimens
+                    ← Continue discovering plants
                   </Link>
                   <span>{totalItems} items in bag</span>
                 </div>

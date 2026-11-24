@@ -30,13 +30,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) {
-    return { title: "Specimen Not Found" };
+    return { title: "Plant Not Found" };
   }
 
   const priceFormatted = formatPrice(product.sale_price ?? product.price);
 
   return {
-    title: product.seo_title || `${product.name} — Adenium Specimen`,
+    title: product.seo_title || `${product.name} — Desert Rose Plant`,
     description:
       product.seo_description ||
       `Buy authentic ${product.name} (${product.species}) at Pak Adenium Nursery. ${priceFormatted}. Safe delivery in Pakistan.`,
@@ -157,10 +157,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 whatsappNumber={settings.general.whatsapp}
               />
 
-              {/* Specimen Physical Parameters Matrix */}
+              {/* Plant Physical Parameters Matrix */}
               <div className="rounded-2xl bg-white border border-botanical-200/80 p-5 space-y-3 shadow-subtle">
                 <h3 className="font-serif text-sm font-semibold text-botanical-950 uppercase tracking-wider">
-                  Botanical Specimen Attributes
+                  Plant Characteristics &amp; Details
                 </h3>
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
@@ -175,7 +175,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   <div className="border-b border-botanical-100 pb-2">
                     <span className="text-charcoal-muted block">Grafting Status</span>
                     <span className="font-medium text-botanical-950">
-                      {product.is_grafted ? "Verified Multi-Petal Graft" : "Non-Grafted Seed Specimen"}
+                      {product.is_grafted ? "Verified Multi-Petal Graft" : "Seed-Grown Plant"}
                     </span>
                   </div>
                   <div className="border-b border-botanical-100 pb-2">
@@ -197,10 +197,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <div className="lg:col-span-7 space-y-6">
               <div>
                 <span className="text-xs uppercase tracking-widest text-clay font-medium">
-                  Specimen Archive
+                  Plant Details
                 </span>
                 <h2 className="font-serif text-2xl sm:text-3xl font-medium text-botanical-950 mt-1">
-                  About this Specimen
+                  About this Plant
                 </h2>
               </div>
 
@@ -291,7 +291,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     Botanical Companions
                   </span>
                   <h3 className="font-serif text-2xl sm:text-3xl font-medium text-botanical-950">
-                    Related Desert Rose Specimens
+                    Related Desert Rose Plants
                   </h3>
                 </div>
                 <Link
