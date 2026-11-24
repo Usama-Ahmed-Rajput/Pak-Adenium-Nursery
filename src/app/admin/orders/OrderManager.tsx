@@ -499,7 +499,7 @@ export default function OrderManager({ initialOrders, highlightId }: OrderManage
               <a
                 href={generateWhatsAppLink(
                   selectedOrder.customer_whatsapp,
-                  `Assalam-o-Alaikum ${selectedOrder.customer_name}, this is Pak Adenium Nursery regarding your Order #${selectedOrder.order_number}. Your parcel status is currently: ${selectedOrder.order_status}.${selectedOrder.tracking_number ? ` Courier: ${selectedOrder.courier_name || 'Courier'}, Tracking Number: ${selectedOrder.tracking_number}.` : ''}`
+                  `Hello ${selectedOrder.customer_name}, this is Pak Adenium Nursery regarding your Order #${selectedOrder.order_number}. Your parcel status is currently: ${selectedOrder.order_status}.${selectedOrder.tracking_number ? ` Courier: ${selectedOrder.courier_name || 'Courier'}, Tracking Number: ${selectedOrder.tracking_number}.` : ''}`
                 )}
                 target="_blank"
                 rel="noopener noreferrer"

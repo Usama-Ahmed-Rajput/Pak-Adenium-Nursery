@@ -86,12 +86,12 @@ export default function Navbar({
     {
       name: "Grafted Flowering Varieties",
       href: "/shop?category=grafted-varieties",
-      description: "Multi-petal layered blooms in vibrant reds, purples, and pastels",
+      description: "Multi-petal layered blooms in vibrant colors",
     },
     {
       name: "Desert Rose Bonsai",
       href: "/shop?category=adenium-arabicum",
-      description: "Sculptural wide-base Arabicum trees with massive trunks",
+      description: "Sculptural wide-base specimen trees with thick trunks",
     },
     {
       name: "Specimen Bonsai Trays",
@@ -101,10 +101,10 @@ export default function Navbar({
     {
       name: "Rare Collector Hybrids",
       href: "/shop?category=rare-collector-hybrids",
-      description: "Curled Dorset Horn, variegated leaves, and Thai mutations",
+      description: "Curled leaf varieties, variegated foliage, and rare mutations",
     },
     {
-      name: "Seeds & Care Supplies",
+      name: "Seeds & Plant Food",
       href: "/shop?category=seeds-and-care",
       description: "Porous mineral potting media, plant food, and fresh seeds",
     },
@@ -131,7 +131,7 @@ export default function Navbar({
               backgroundColor: isDarkNav ? "rgba(10, 20, 15, 0.96)" : "#15271E",
               color: "#F5F2E9",
             }}
-            className="border-b border-white/10 text-[11px] py-1.5 px-4 transition-colors"
+            className="border-b border-white/10 text-[11px] py-1 px-4 transition-colors"
           >
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
               {/* Left location tag */}
@@ -179,16 +179,17 @@ export default function Navbar({
         <div
           className={`transition-all duration-200 border-b ${
             isDarkNav
-              ? "bg-[#0d1813]/90 backdrop-blur-md border-white/10 text-white py-2.5 sm:py-3"
+              ? "bg-[#0d1813]/90 backdrop-blur-md border-white/10 text-white py-2"
               : isScrolled
-              ? "bg-white/95 backdrop-blur-md border-[#E5E0D8] shadow-sm text-neutral-900 py-2.5"
-              : "bg-white border-[#E5E0D8] text-neutral-900 py-3"
+              ? "bg-white/95 backdrop-blur-md border-[#E5E0D8] shadow-sm text-neutral-900 py-2"
+              : "bg-white border-[#E5E0D8] text-neutral-900 py-2.5"
           }`}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
             {/* Mobile Menu Button */}
             <div className="flex items-center lg:hidden">
               <button
+                type="button"
                 onClick={() => setMobileMenuOpen(true)}
                 className={`p-1.5 -ml-1.5 rounded-md transition-colors ${
                   isDarkNav
@@ -233,11 +234,12 @@ export default function Navbar({
               {/* "Shop Plants" with Dropdown */}
               <div
                 ref={dropdownRef}
-                className="relative"
+                className="relative py-1"
                 onMouseEnter={() => setShopDropdownOpen(true)}
                 onMouseLeave={() => setShopDropdownOpen(false)}
               >
                 <button
+                  type="button"
                   onClick={() => setShopDropdownOpen(!shopDropdownOpen)}
                   className={`inline-flex items-center gap-1.5 py-1 transition-colors relative ${
                     isShopActive
@@ -263,61 +265,63 @@ export default function Navbar({
 
                 {/* Dropdown Menu Card */}
                 {shopDropdownOpen && (
-                  <div
-                    className={`absolute top-full left-0 mt-2 w-80 rounded-xl border p-2 shadow-xl transition-all duration-150 animate-in fade-in slide-in-from-top-1 ${
-                      isDarkNav
-                        ? "bg-[#112018]/95 backdrop-blur-md border-white/15 text-white"
-                        : "bg-white border-[#E5E0D8] text-neutral-900"
-                    }`}
-                  >
-                    <div className="space-y-1">
-                      {plantCategories.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          onClick={() => setShopDropdownOpen(false)}
-                          className={`group/item flex flex-col px-3 py-2 rounded-lg transition-colors ${
-                            item.isAll
-                              ? isDarkNav
-                                ? "bg-white/10 hover:bg-white/15 text-white font-medium"
-                                : "bg-neutral-50 hover:bg-neutral-100 text-[#15271E] font-medium"
-                              : isDarkNav
-                              ? "hover:bg-white/10 text-white/90"
-                              : "hover:bg-neutral-50 text-neutral-800"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between text-[13px] font-medium">
-                            <span className="group-hover/item:text-clay transition-colors">
-                              {item.name}
-                            </span>
-                            <ArrowRight className="w-3 h-3 opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all text-clay" />
-                          </div>
-                          <span
-                            className={`text-[11px] leading-snug line-clamp-1 mt-0.5 ${
-                              isDarkNav ? "text-white/60" : "text-neutral-500"
-                            }`}
-                          >
-                            {item.description}
-                          </span>
-                        </Link>
-                      ))}
-                    </div>
-
+                  <div className="absolute top-full left-0 pt-1.5 z-50">
                     <div
-                      className={`mt-2 pt-2 border-t flex items-center justify-between px-3 py-1 text-[11px] ${
+                      className={`w-80 rounded-xl border p-2 shadow-2xl transition-all duration-150 ease-out ${
                         isDarkNav
-                          ? "border-white/10 text-white/60"
-                          : "border-neutral-100 text-neutral-500"
+                          ? "bg-[#112018]/98 backdrop-blur-md border-white/15 text-white"
+                          : "bg-white border-[#E5E0D8] text-neutral-900"
                       }`}
                     >
-                      <span>Need help picking a plant?</span>
-                      <Link
-                        href="/plant-finder"
-                        onClick={() => setShopDropdownOpen(false)}
-                        className="text-clay hover:underline font-semibold"
+                      <div className="space-y-1">
+                        {plantCategories.map((item) => (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            onClick={() => setShopDropdownOpen(false)}
+                            className={`group/item flex flex-col px-3 py-2 rounded-lg transition-colors ${
+                              item.isAll
+                                ? isDarkNav
+                                  ? "bg-white/10 hover:bg-white/15 text-white font-medium"
+                                  : "bg-neutral-50 hover:bg-neutral-100 text-[#15271E] font-medium"
+                                : isDarkNav
+                                ? "hover:bg-white/10 text-white/90"
+                                : "hover:bg-neutral-50 text-neutral-800"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between text-[13px] font-medium">
+                              <span className="group-hover/item:text-clay transition-colors">
+                                {item.name}
+                              </span>
+                              <ArrowRight className="w-3 h-3 opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all text-clay" />
+                            </div>
+                            <span
+                              className={`text-[11px] leading-snug line-clamp-1 mt-0.5 ${
+                                isDarkNav ? "text-white/60" : "text-neutral-500"
+                              }`}
+                            >
+                              {item.description}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+
+                      <div
+                        className={`mt-2 pt-2 border-t flex items-center justify-between px-3 py-1 text-[11px] ${
+                          isDarkNav
+                            ? "border-white/10 text-white/60"
+                            : "border-neutral-100 text-neutral-500"
+                        }`}
                       >
-                        Try Plant Finder &rarr;
-                      </Link>
+                        <span>Looking for advice?</span>
+                        <Link
+                          href="/plant-finder"
+                          onClick={() => setShopDropdownOpen(false)}
+                          className="text-clay hover:underline font-semibold"
+                        >
+                          Try Plant Finder &rarr;
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 )}

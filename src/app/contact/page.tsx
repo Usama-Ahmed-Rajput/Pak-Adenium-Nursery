@@ -53,7 +53,7 @@ export default async function ContactPage() {
 
               <a
                 href={`https://wa.me/${settings.general.whatsapp}?text=${encodeURIComponent(
-                  "Assalam-o-Alaikum Pak Adenium Nursery, I would like to speak to a grower."
+                  "Hello Pak Adenium Nursery, I would like to speak to a grower."
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

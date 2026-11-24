@@ -157,7 +157,7 @@ export default function CustomerManager({ initialCustomers }: CustomerManagerPro
                       <a
                         href={generateWhatsAppLink(
                           customer.whatsapp,
-                          `Assalam-o-Alaikum ${customer.name}, greetings from Pak Adenium Nursery.`
+                          `Hello ${customer.name}, greetings from Pak Adenium Nursery.`
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
