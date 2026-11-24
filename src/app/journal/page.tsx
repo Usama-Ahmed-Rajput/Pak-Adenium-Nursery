@@ -17,6 +17,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function JournalPage() {
   const [articles, settings] = await Promise.all([
     getArticles(),
@@ -28,6 +30,9 @@ export default async function JournalPage() {
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}
+        phone={settings.general.phone}
+        address={settings.general.address}
+        nurseryName={settings.general.nursery_name}
       />
       <main className="flex-1 bg-ivory py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -105,7 +110,15 @@ export default async function JournalPage() {
           </div>
         </div>
       </main>
-      <Footer />
+      <Footer
+        nurseryName={settings.general.nursery_name}
+        tagline={settings.general.tagline}
+        phone={settings.general.phone}
+        email={settings.general.email}
+        address={settings.general.address}
+        social={settings.social}
+        whatsappNumber={settings.general.whatsapp}
+      />
     </>
   );
 }

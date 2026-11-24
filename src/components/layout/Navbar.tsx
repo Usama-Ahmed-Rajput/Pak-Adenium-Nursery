@@ -27,6 +27,9 @@ interface NavbarProps {
     text_color: string;
   };
   whatsappNumber?: string;
+  phone?: string;
+  address?: string;
+  nurseryName?: string;
 }
 
 export default function Navbar({
@@ -37,7 +40,10 @@ export default function Navbar({
     bg_color: "#15271E",
     text_color: "#F5F2E9",
   },
-  whatsappNumber = "923001234567",
+  whatsappNumber = "923002560340",
+  phone = "+92 300 2560340",
+  address = "Nursery & Gardens · Karachi, Pakistan",
+  nurseryName = "Pak Adenium",
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -137,7 +143,7 @@ export default function Navbar({
               {/* Left location tag */}
               <div className="hidden md:flex items-center gap-1.5 text-white/80 font-normal">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>Nursery &amp; Gardens · Multan, Pakistan</span>
+                <span className="truncate max-w-xs">{address}</span>
               </div>
 
               {/* Center announcement text */}
@@ -168,7 +174,7 @@ export default function Navbar({
                   className="hover:text-white transition-colors flex items-center gap-1"
                 >
                   <MessageCircle className="w-3 h-3 text-emerald-400" />
-                  <span>Help: +92 300 1234567</span>
+                  <span>Help: {phone}</span>
                 </a>
               </div>
             </div>
@@ -221,7 +227,7 @@ export default function Navbar({
                       : "text-[#15271E] group-hover:text-neutral-800"
                   }`}
                 >
-                  Pak Adenium
+                  {nurseryName}
                 </span>
                 <span className="text-[9px] tracking-wider uppercase text-clay font-semibold">
                   Desert Rose Nursery
@@ -444,7 +450,7 @@ export default function Navbar({
                   </div>
                   <div>
                     <span className="font-serif text-base font-normal text-[#15271E] block">
-                      Pak Adenium
+                      {nurseryName}
                     </span>
                     <span className="text-[9px] uppercase tracking-wider text-clay font-medium block">
                       Desert Rose Nursery

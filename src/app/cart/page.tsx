@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/utils";
@@ -16,18 +16,36 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { SiteSettings } from "@/types";
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, subtotal, totalItems } = useCart();
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
 
-  const freeShippingThreshold = 6000;
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.settings) setSettings(data.settings);
+      })
+      .catch(() => {});
+  }, []);
+
+  const freeShippingThreshold = settings?.shipping?.free_shipping_threshold ?? 6000;
+  const standardRate = settings?.shipping?.default_shipping_fee ?? 350;
   const isFreeShipping = subtotal >= freeShippingThreshold;
-  const shippingFee = isFreeShipping ? 0 : 350;
+  const shippingFee = isFreeShipping ? 0 : standardRate;
   const grandTotal = subtotal + shippingFee;
 
   return (
     <>
-      <Navbar />
+      <Navbar
+        announcement={settings?.announcement}
+        whatsappNumber={settings?.general?.whatsapp}
+        phone={settings?.general?.phone}
+        address={settings?.general?.address}
+        nurseryName={settings?.general?.nursery_name}
+      />
       <main className="flex-1 bg-ivory py-10 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div>
@@ -207,7 +225,15 @@ export default function CartPage() {
           )}
         </div>
       </main>
-      <Footer />
+      <Footer
+        nurseryName={settings?.general?.nursery_name}
+        tagline={settings?.general?.tagline}
+        phone={settings?.general?.phone}
+        email={settings?.general?.email}
+        address={settings?.general?.address}
+        social={settings?.social}
+        whatsappNumber={settings?.general?.whatsapp}
+      />
     </>
   );
 }

@@ -9,9 +9,10 @@ import { ShoppingBag, MessageCircle, Check } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
+  whatsappNumber?: string;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, whatsappNumber }: ProductCardProps) {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
@@ -35,7 +36,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
   };
 
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "923001234567";
+  const phone = whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "923002560340";
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://pakadenium.pk";
   const whatsappUrl = buildProductInquiryWhatsApp(product, phone, siteUrl);
 

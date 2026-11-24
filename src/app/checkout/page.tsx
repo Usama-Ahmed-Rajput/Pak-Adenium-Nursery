@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/utils";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { SiteSettings } from "@/types";
 import {
   ShieldCheck,
   Truck,
@@ -58,9 +59,20 @@ export default function CheckoutPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
 
-  const freeShippingThreshold = 6000;
-  const shippingFee = subtotal >= freeShippingThreshold ? 0 : 350;
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.settings) setSettings(data.settings);
+      })
+      .catch(() => {});
+  }, []);
+
+  const freeShippingThreshold = settings?.shipping?.free_shipping_threshold ?? 6000;
+  const standardRate = settings?.shipping?.default_shipping_fee ?? 350;
+  const shippingFee = subtotal >= freeShippingThreshold ? 0 : standardRate;
   const grandTotal = subtotal + shippingFee;
 
   const handleInputChange = (
@@ -138,7 +150,13 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <>
-        <Navbar />
+        <Navbar
+        announcement={settings?.announcement}
+        whatsappNumber={settings?.general?.whatsapp}
+        phone={settings?.general?.phone}
+        address={settings?.general?.address}
+        nurseryName={settings?.general?.nursery_name}
+      />
         <main className="flex-1 bg-ivory py-16 text-center">
           <div className="max-w-md mx-auto px-4 space-y-4">
             <h1 className="font-serif text-3xl font-medium text-botanical-950">
@@ -155,14 +173,28 @@ export default function CheckoutPage() {
             </Link>
           </div>
         </main>
-        <Footer />
+        <Footer
+        nurseryName={settings?.general?.nursery_name}
+        tagline={settings?.general?.tagline}
+        phone={settings?.general?.phone}
+        email={settings?.general?.email}
+        address={settings?.general?.address}
+        social={settings?.social}
+        whatsappNumber={settings?.general?.whatsapp}
+      />
       </>
     );
   }
 
   return (
     <>
-      <Navbar />
+      <Navbar
+        announcement={settings?.announcement}
+        whatsappNumber={settings?.general?.whatsapp}
+        phone={settings?.general?.phone}
+        address={settings?.general?.address}
+        nurseryName={settings?.general?.nursery_name}
+      />
       <main className="flex-1 bg-ivory py-10 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div>
@@ -407,10 +439,10 @@ export default function CheckoutPage() {
                       </p>
                       {formData.payment_method === "Bank Transfer" && (
                         <div className="mt-3 p-3 rounded-lg bg-ivory border border-botanical-200 text-xs space-y-1 font-mono text-botanical-900">
-                          <p>Bank: Meezan Bank Limited</p>
-                          <p>Title: Pak Adenium Horticultural Farms</p>
-                          <p>Account: 02010108928371</p>
-                          <p>IBAN: PK45MEZN0002010108928371</p>
+                          <p>Bank: {settings?.payment_methods?.bank_name || "Meezan Bank Limited"}</p>
+                          <p>Title: {settings?.payment_methods?.bank_title || "Pak Adenium Horticultural Farms"}</p>
+                          <p>Account: {settings?.payment_methods?.account_number || "02010108928371"}</p>
+                          <p>IBAN: {settings?.payment_methods?.iban || "PK45MEZN0002010108928371"}</p>
                         </div>
                       )}
                     </div>
@@ -444,8 +476,15 @@ export default function CheckoutPage() {
                       </p>
                       {formData.payment_method === "EasyPaisa/JazzCash" && (
                         <div className="mt-3 p-3 rounded-lg bg-ivory border border-botanical-200 text-xs space-y-1 font-mono text-botanical-900">
-                          <p>Account Title: Tariq Mahmood</p>
-                          <p>Number: 0300-1234567</p>
+                          {settings?.payment_methods?.easypaisa_number && (
+                            <p>EasyPaisa: {settings.payment_methods.easypaisa_number}</p>
+                          )}
+                          {settings?.payment_methods?.jazzcash_number && (
+                            <p>JazzCash: {settings.payment_methods.jazzcash_number}</p>
+                          )}
+                          {!settings?.payment_methods?.easypaisa_number && !settings?.payment_methods?.jazzcash_number && (
+                            <p>Number: {settings?.general?.phone || "+92 300 2560340"}</p>
+                          )}
                           <p className="text-[10px] text-charcoal-muted font-sans">
                             Share payment receipt screenshot on WhatsApp after placing order.
                           </p>
@@ -538,7 +577,15 @@ export default function CheckoutPage() {
           </form>
         </div>
       </main>
-      <Footer />
+      <Footer
+        nurseryName={settings?.general?.nursery_name}
+        tagline={settings?.general?.tagline}
+        phone={settings?.general?.phone}
+        email={settings?.general?.email}
+        address={settings?.general?.address}
+        social={settings?.social}
+        whatsappNumber={settings?.general?.whatsapp}
+      />
     </>
   );
 }

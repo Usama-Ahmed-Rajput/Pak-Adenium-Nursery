@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     "Learn about Pak Adenium, our dedicated Desert Rose propagation grounds in Multan, and our passion for nurturing sculptural living botanical art in Pakistan.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function AboutPage() {
   const settings = await getSiteSettings();
 
@@ -19,6 +21,9 @@ export default async function AboutPage() {
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}
+        phone={settings.general.phone}
+        address={settings.general.address}
+        nurseryName={settings.general.nursery_name}
       />
       <main className="flex-1 bg-ivory py-12 sm:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -90,7 +95,15 @@ export default async function AboutPage() {
           </div>
         </div>
       </main>
-      <Footer />
+      <Footer
+        nurseryName={settings.general.nursery_name}
+        tagline={settings.general.tagline}
+        phone={settings.general.phone}
+        email={settings.general.email}
+        address={settings.general.address}
+        social={settings.social}
+        whatsappNumber={settings.general.whatsapp}
+      />
     </>
   );
 }

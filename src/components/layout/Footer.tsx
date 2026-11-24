@@ -8,6 +8,7 @@ interface FooterProps {
   phone?: string;
   email?: string;
   address?: string;
+  whatsappNumber?: string;
   social?: {
     facebook?: string;
     instagram?: string;
@@ -19,9 +20,10 @@ interface FooterProps {
 export default function Footer({
   nurseryName = "Pak Adenium",
   tagline = "Pakistan's dedicated botanical nursery specializing in mature sculptural Desert Roses (Adenium obesum, Adenium arabicum, and rare collector hybrids). Propagated with patience, nurtured for extreme heat resilience.",
-  phone = "+92 300 1234567",
+  phone = "+92 300 2560340",
   email = "inquiry@pakadenium.pk",
-  address = "Nursery Grounds: Multan & Dispatch Hub Lahore, Pakistan",
+  address = "Pak Adenium Nursery, Karachi, Pakistan",
+  whatsappNumber = "923002560340",
   social,
 }: FooterProps) {
   const currentYear = new Date().getFullYear();
@@ -193,7 +195,7 @@ export default function Footer({
             </li>
             <li>
               <a
-                href="https://wa.me/923001234567"
+                href={`https://wa.me/${whatsappNumber || phone.replace(/\D/g, "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#25D366] transition-colors flex items-center gap-1.5"

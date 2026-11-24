@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "Check the status, payment verification, and dispatch details of your Pak Adenium order.",
 };
 
+export const dynamic = "force-dynamic";
+
 interface OrderLookupProps {
   searchParams: Promise<{ order?: string }>;
 }
@@ -42,6 +44,9 @@ export default async function OrderLookupPage({ searchParams }: OrderLookupProps
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}
+        phone={settings.general.phone}
+        address={settings.general.address}
+        nurseryName={settings.general.nursery_name}
       />
       <main className="flex-1 bg-ivory py-12 sm:py-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
@@ -190,7 +195,15 @@ export default async function OrderLookupPage({ searchParams }: OrderLookupProps
           )}
         </div>
       </main>
-      <Footer />
+      <Footer
+        nurseryName={settings.general.nursery_name}
+        tagline={settings.general.tagline}
+        phone={settings.general.phone}
+        email={settings.general.email}
+        address={settings.general.address}
+        social={settings.social}
+        whatsappNumber={settings.general.whatsapp}
+      />
     </>
   );
 }

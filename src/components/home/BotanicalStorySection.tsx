@@ -63,7 +63,7 @@ export default function BotanicalStorySection({
               </h2>
 
               <p className="text-sm sm:text-base text-[#525B52] leading-relaxed pt-1">
-                {description || "In our Multan nursery, summer temperatures routinely cross 45°C. While delicate tropical plants struggle, the Desert Rose thrives in this intense sun—building a dense, water-storing caudex and producing rich multi-petal flower flushes."}
+                {description || "In our nursery, summer temperatures routinely cross 45°C. While delicate tropical plants struggle, the Desert Rose thrives in this intense sun—building a dense, water-storing caudex and producing rich multi-petal flower flushes."}
               </p>
 
               <p className="text-sm sm:text-base text-[#525B52] leading-relaxed">

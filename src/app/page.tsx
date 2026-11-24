@@ -9,7 +9,8 @@ import PlantFinderBanner from "@/components/home/PlantFinderBanner";
 import JournalHighlights from "@/components/home/JournalHighlights";
 import { getProducts, getCategories, getArticles, getSiteSettings } from "@/lib/db";
 
-export const revalidate = 60; // Incremental Static Regeneration
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function HomePage() {
   const [products, categories, articles, settings] = await Promise.all([
@@ -24,6 +25,9 @@ export default async function HomePage() {
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}
+        phone={settings.general.phone}
+        address={settings.general.address}
+        nurseryName={settings.general.nursery_name}
       />
       <main className="flex-1">
         <HeroSection
@@ -33,6 +37,7 @@ export default async function HomePage() {
           ctaLink={settings.homepage?.hero_cta_link}
           secondaryText={settings.homepage?.hero_secondary_text}
           secondaryLink={settings.homepage?.hero_secondary_link}
+          location={settings.general.address}
         />
         <BotanicalStorySection
           badge={settings.homepage?.story_badge}
@@ -51,6 +56,7 @@ export default async function HomePage() {
         email={settings.general.email}
         address={settings.general.address}
         social={settings.social}
+        whatsappNumber={settings.general.whatsapp}
       />
     </>
   );

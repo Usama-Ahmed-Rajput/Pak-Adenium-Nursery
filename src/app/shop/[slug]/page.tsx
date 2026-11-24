@@ -20,6 +20,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -108,6 +110,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}
+        phone={settings.general.phone}
+        address={settings.general.address}
+        nurseryName={settings.general.nursery_name}
       />
 
       <main className="flex-1 bg-ivory py-8 sm:py-12">
@@ -312,7 +317,15 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         </div>
       </main>
 
-      <Footer />
+      <Footer
+        nurseryName={settings.general.nursery_name}
+        tagline={settings.general.tagline}
+        phone={settings.general.phone}
+        email={settings.general.email}
+        address={settings.general.address}
+        social={settings.social}
+        whatsappNumber={settings.general.whatsapp}
+      />
     </>
   );
 }

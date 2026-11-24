@@ -8,6 +8,8 @@ import { getArticleBySlug, getArticles, getSiteSettings } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 import { ChevronRight, Clock, BookOpen, User, Share2, ArrowLeft } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
@@ -71,6 +73,9 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}
+        phone={settings.general.phone}
+        address={settings.general.address}
+        nurseryName={settings.general.nursery_name}
       />
       <main className="flex-1 bg-ivory py-10 sm:py-16">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -195,7 +200,15 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
           </div>
         </article>
       </main>
-      <Footer />
+      <Footer
+        nurseryName={settings.general.nursery_name}
+        tagline={settings.general.tagline}
+        phone={settings.general.phone}
+        email={settings.general.email}
+        address={settings.general.address}
+        social={settings.social}
+        whatsappNumber={settings.general.whatsapp}
+      />
     </>
   );
 }

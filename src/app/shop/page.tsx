@@ -5,7 +5,7 @@ import Footer from "@/components/layout/Footer";
 import CatalogView from "@/components/shop/CatalogView";
 import { getProducts, getCategories, getSiteSettings } from "@/lib/db";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -27,6 +27,9 @@ export default async function ShopPage() {
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}
+        phone={settings.general.phone}
+        address={settings.general.address}
+        nurseryName={settings.general.nursery_name}
       />
       <main className="flex-1">
         <Suspense
@@ -39,7 +42,15 @@ export default async function ShopPage() {
           <CatalogView initialProducts={products} categories={categories} />
         </Suspense>
       </main>
-      <Footer />
+      <Footer
+        nurseryName={settings.general.nursery_name}
+        tagline={settings.general.tagline}
+        phone={settings.general.phone}
+        email={settings.general.email}
+        address={settings.general.address}
+        social={settings.social}
+        whatsappNumber={settings.general.whatsapp}
+      />
     </>
   );
 }

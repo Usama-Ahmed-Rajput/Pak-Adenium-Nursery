@@ -11,6 +11,7 @@ interface HeroSectionProps {
   ctaLink?: string;
   secondaryText?: string;
   secondaryLink?: string;
+  location?: string;
 }
 
 export default function HeroSection({
@@ -20,6 +21,7 @@ export default function HeroSection({
   ctaLink = "/shop",
   secondaryText = "About Our Nursery",
   secondaryLink = "/about",
+  location = "Botanical Nursery · Karachi, Pakistan",
 }: HeroSectionProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
@@ -90,7 +92,7 @@ export default function HeroSection({
         <div className="pt-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-black/40 backdrop-blur-sm border border-white/15 text-xs text-[#F5F2E9] font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-clay" />
-            <span>Botanical Nursery · Multan, Pakistan</span>
+            <span>{location}</span>
           </div>
         </div>
 

@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { formatPrice, generateWhatsAppLink } from "@/lib/utils";
 import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, MessageCircle } from "lucide-react";
+import { SiteSettings } from "@/types";
 
 export default function CartDrawer() {
   const {
@@ -17,15 +18,27 @@ export default function CartDrawer() {
     setIsCartOpen,
   } = useCart();
 
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.settings) setSettings(data.settings);
+      })
+      .catch(() => {});
+  }, []);
+
   if (!isCartOpen) return null;
 
-  const freeShippingThreshold = 6000;
+  const freeShippingThreshold = settings?.shipping?.free_shipping_threshold ?? 6000;
+  const standardRate = settings?.shipping?.default_shipping_fee ?? 350;
   const progressPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
 
   // Generate WhatsApp order summary link
   const buildWhatsAppOrderLink = () => {
-    const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "923001234567";
+    const phone = settings?.general?.whatsapp || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "923002560340";
     const itemsSummary = items
       .map((item, idx) => `${idx + 1}. ${item.name} (${item.sku}) × ${item.quantity} = ${formatPrice((item.sale_price ?? item.price) * item.quantity)}`)
       .join("\n");
@@ -213,7 +226,7 @@ export default function CartDrawer() {
                     {subtotal >= freeShippingThreshold ? (
                       <span className="text-emerald-700 font-medium">FREE</span>
                     ) : (
-                      "Calculated at checkout (Rs. 350)"
+                      `Calculated at checkout (${formatPrice(standardRate)})`
                     )}
                   </span>
                 </div>
@@ -221,7 +234,7 @@ export default function CartDrawer() {
                   <span>Estimated Total</span>
                   <span>
                     {formatPrice(
-                      subtotal + (subtotal >= freeShippingThreshold ? 0 : 350)
+                      subtotal + (subtotal >= freeShippingThreshold ? 0 : standardRate)
                     )}
                   </span>
                 </div>

@@ -354,7 +354,7 @@ export default function PlantFinderPage() {
                   Our head grower can film live plants on our nursery benches and guide your selection via WhatsApp.
                 </p>
                 <a
-                  href={`https://wa.me/923001234567?text=${encodeURIComponent(
+                  href={`https://wa.me/923002560340?text=${encodeURIComponent(
                     `Hello Pak Adenium, I completed your Plant Finder quiz and would like personalized recommendations for: ${answers.aesthetic} in ${answers.location}.`
                   )}`}
                   target="_blank"

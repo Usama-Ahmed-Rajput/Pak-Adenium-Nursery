@@ -130,7 +130,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 Looking for a specific collector hybrid or custom graft? Inquire directly with our nursery team on WhatsApp.
               </p>
               <a
-                href={`https://wa.me/923001234567?text=${encodeURIComponent(`Hello, I am searching for ${query} at Pak Adenium Nursery.`)}`}
+                href={`https://wa.me/923002560340?text=${encodeURIComponent(`Hello, I am searching for ${query} at Pak Adenium Nursery.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-medium text-clay hover:underline"

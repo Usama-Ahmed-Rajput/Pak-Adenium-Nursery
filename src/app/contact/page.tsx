@@ -12,6 +12,8 @@ export const metadata: Metadata = {
     "Get in touch with Pak Adenium Nursery. Inquire about current blooming varieties, order assistance, and live plant dispatch across Pakistan.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function ContactPage() {
   const settings = await getSiteSettings();
 
@@ -20,6 +22,9 @@ export default async function ContactPage() {
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}
+        phone={settings.general.phone}
+        address={settings.general.address}
+        nurseryName={settings.general.nursery_name}
       />
       <main className="flex-1 bg-ivory py-12 sm:py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -60,7 +65,7 @@ export default async function ContactPage() {
                 className="w-full py-3.5 px-4 rounded-xl bg-[#25D366] text-botanical-950 font-semibold text-xs flex items-center justify-center gap-2 shadow-subtle hover:bg-[#20ba59] transition-colors"
               >
                 <MessageCircle className="w-4 h-4 text-botanical-950" />
-                <span>Chat on WhatsApp (+92 300 1234567)</span>
+                <span>Chat on WhatsApp ({settings.general.phone || `+${settings.general.whatsapp}`})</span>
               </a>
 
               <div className="pt-4 border-t border-botanical-800 space-y-4 text-xs text-ivory/80">
@@ -112,7 +117,15 @@ export default async function ContactPage() {
           </div>
         </div>
       </main>
-      <Footer />
+      <Footer
+        nurseryName={settings.general.nursery_name}
+        tagline={settings.general.tagline}
+        phone={settings.general.phone}
+        email={settings.general.email}
+        address={settings.general.address}
+        social={settings.social}
+        whatsappNumber={settings.general.whatsapp}
+      />
     </>
   );
 }

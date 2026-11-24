@@ -458,7 +458,7 @@ export default function CatalogView({ initialProducts, categories }: CatalogView
                     Reset Filters
                   </button>
                   <a
-                    href="https://wa.me/923001234567"
+                    href="https://wa.me/923002560340"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 rounded-md bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold transition-colors"
