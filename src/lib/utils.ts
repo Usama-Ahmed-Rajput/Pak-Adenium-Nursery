@@ -47,7 +47,7 @@ export function buildProductInquiryWhatsApp(
   const priceDisplay = formatPrice(product.sale_price ?? product.price);
 
   const message = [
-    `Assalam-o-Alaikum Pak Adenium Nursery,`,
+    `Hello Pak Adenium Nursery,`,
     ``,
     `I am inquiring about this specimen plant from your catalog:`,
     `🌿 *${product.name}*`,

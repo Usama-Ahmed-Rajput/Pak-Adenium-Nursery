@@ -15,7 +15,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({
   headline = "Nature, shaped by patience.",
-  description = "Sculptural caudex forms, multi-petal grafted blooms, and mature Arabicum bonsai—cultivated under Pakistan's natural sun and shipped safely nationwide in custom protective packing.",
+  description = "Sculptural caudex forms, multi-petal grafted blooms, and mature desert rose bonsai—cultivated under Pakistan's natural sun and shipped safely nationwide in custom protective packing.",
   ctaText = "Explore Collection",
   ctaLink = "/shop",
   secondaryText = "About Our Nursery",

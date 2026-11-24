@@ -21,7 +21,7 @@ export default function CategoriesGrid({ categories }: CategoriesGridProps) {
               Browse by Variety &amp; Form
             </h2>
             <p className="text-sm text-[#525B52] max-w-xl mt-1.5">
-              From layered multi-petal flowers and fat Arabicum caudexes to mature bonsai and specialized potting mixes.
+              From layered multi-petal flowers and sculptural swollen caudexes to mature bonsai and specialized potting mixes.
             </p>
           </div>
 
