@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Product } from "@/types";
 import { formatPrice, buildProductInquiryWhatsApp } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
@@ -12,9 +12,16 @@ interface ProductOrderPanelProps {
 }
 
 export default function ProductOrderPanel({ product, whatsappNumber }: ProductOrderPanelProps) {
-  const { addToCart } = useCart();
+  const { addToCart, setIsCartOpen } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [siteUrl, setSiteUrl] = useState("https://pakadenium.pk");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setSiteUrl(window.location.origin);
+    }
+  }, []);
 
   const currentPrice = product.sale_price ?? product.price;
   const isSale = product.sale_price && product.sale_price < product.price;
@@ -24,12 +31,12 @@ export default function ProductOrderPanel({ product, whatsappNumber }: ProductOr
   const handleAdd = () => {
     if (product.stock_quantity > 0) {
       addToCart(product, quantity);
+      setIsCartOpen(true);
       setAdded(true);
       setTimeout(() => setAdded(false), 2000);
     }
   };
 
-  const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://pakadenium.pk";
   const whatsappUrl = buildProductInquiryWhatsApp(product, whatsappNumber, siteUrl);
 
   return (
@@ -97,11 +104,12 @@ export default function ProductOrderPanel({ product, whatsappNumber }: ProductOr
           </div>
 
           <button
+            type="button"
             onClick={handleAdd}
             disabled={isOutOfStock}
-            className={`flex-1 py-3 px-6 rounded-md font-semibold text-sm flex items-center justify-center gap-2 transition-colors ${
+            className={`flex-1 py-3 px-6 rounded-md font-semibold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:cursor-not-allowed ${
               added
-                ? "bg-emerald-700 text-white"
+                ? "bg-emerald-700 text-white cursor-default"
                 : isOutOfStock
                 ? "bg-neutral-100 text-neutral-400 cursor-not-allowed"
                 : "bg-[#15271E] hover:bg-[#233D2E] text-white shadow-sm"

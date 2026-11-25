@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/types";
 import { formatPrice, buildProductInquiryWhatsApp } from "@/lib/utils";
@@ -13,12 +13,20 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, whatsappNumber }: ProductCardProps) {
-  const { addToCart } = useCart();
+  const { addToCart, setIsCartOpen } = useCart();
   const [added, setAdded] = useState(false);
+  const [siteUrl, setSiteUrl] = useState("https://pakadenium.pk");
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setSiteUrl(window.location.origin);
+    }
+  }, []);
+
+  const rawImages = Array.isArray(product.images) ? product.images : [];
   const primaryImage =
-    product.images.find((img) => img.is_primary)?.image_url ||
-    product.images[0]?.image_url ||
+    rawImages.find((img) => img.is_primary)?.image_url ||
+    rawImages[0]?.image_url ||
     "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=1200&auto=format&fit=crop";
 
   const currentPrice = product.sale_price ?? product.price;
@@ -26,18 +34,18 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
   const isOutOfStock = product.stock_quantity <= 0;
   const isLowStock = product.stock_quantity > 0 && product.stock_quantity <= (product.low_stock_threshold || 2);
 
-  const handleQuickAdd = (e: React.MouseEvent) => {
+  const handleQuickAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (product.stock_quantity > 0) {
       addToCart(product, 1);
+      setIsCartOpen(true);
       setAdded(true);
-      setTimeout(() => setAdded(false), 1600);
+      setTimeout(() => setAdded(false), 2000);
     }
   };
 
   const phone = whatsappNumber || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "923002560340";
-  const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://pakadenium.pk";
   const whatsappUrl = buildProductInquiryWhatsApp(product, phone, siteUrl);
 
   return (
@@ -119,16 +127,17 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
           </div>
 
           {/* 4. Practical Actions (Add to Cart + WhatsApp inquiry) */}
-          <div className="mt-3 flex items-center gap-2">
+          <div className="mt-3 flex items-center gap-2 relative z-10">
             <button
+              type="button"
               onClick={handleQuickAdd}
               disabled={isOutOfStock}
-              className={`flex-1 py-2.5 px-3 rounded-md text-xs font-semibold flex items-center justify-center gap-2 transition-colors ${
+              className={`flex-1 py-2.5 px-3 rounded-md text-xs font-semibold flex items-center justify-center gap-2 transition-colors relative z-10 ${
                 added
-                  ? "bg-emerald-700 text-white"
+                  ? "bg-emerald-700 text-white cursor-default"
                   : isOutOfStock
                   ? "bg-neutral-100 text-neutral-400 cursor-not-allowed"
-                  : "bg-[#15271E] text-white hover:bg-[#233D2E] active:scale-[0.99]"
+                  : "bg-[#15271E] text-white hover:bg-[#233D2E] active:scale-[0.99] cursor-pointer"
               }`}
               aria-label={`Add ${product.name} to cart`}
             >

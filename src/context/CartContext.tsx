@@ -60,6 +60,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           item.id === product.id ? { ...item, quantity: newQty } : item
         );
       } else {
+        const rawImages = Array.isArray(product.images) ? product.images : [];
+        const primaryImg =
+          rawImages.find((img) => img.is_primary)?.image_url ||
+          rawImages[0]?.image_url ||
+          "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=1200&auto=format&fit=crop";
+
         const newItem: CartItem = {
           id: product.id,
           name: product.name,
@@ -67,9 +73,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           sku: product.sku,
           price: product.price,
           sale_price: product.sale_price,
-          image:
-            product.images[0]?.image_url ||
-            "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=1200&auto=format&fit=crop",
+          image: primaryImg,
           quantity: Math.min(product.stock_quantity, quantity),
           max_stock: product.stock_quantity,
           species: product.species,
