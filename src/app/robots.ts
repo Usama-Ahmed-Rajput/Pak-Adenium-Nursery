@@ -1,7 +1,8 @@
 import { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://pakadenium.pk").replace(/\/$/, "");
+  const baseUrl = getSiteUrl();
   const disallowPaths = ["/admin/", "/admin", "/api/", "/cart", "/checkout", "/checkout/"];
 
   return {

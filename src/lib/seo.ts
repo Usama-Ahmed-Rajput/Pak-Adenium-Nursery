@@ -1,7 +1,7 @@
 import { SiteSettings } from "@/types";
 
 export function getSiteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL || "https://pakadenium.pk").replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_SITE_URL || "https://pak-adenium-nursery.vercel.app").replace(/\/$/, "");
 }
 
 export function buildOrganizationSchema(settings: SiteSettings) {

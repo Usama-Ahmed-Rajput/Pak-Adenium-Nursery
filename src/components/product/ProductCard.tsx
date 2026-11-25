@@ -16,7 +16,7 @@ interface ProductCardProps {
 export default function ProductCard({ product, whatsappNumber }: ProductCardProps) {
   const { addToCart, setIsCartOpen } = useCart();
   const [added, setAdded] = useState(false);
-  const [siteUrl, setSiteUrl] = useState("https://pakadenium.pk");
+  const [siteUrl, setSiteUrl] = useState("https://pak-adenium-nursery.vercel.app");
 
   useEffect(() => {
     if (typeof window !== "undefined") {

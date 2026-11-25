@@ -38,7 +38,7 @@ Pak Adenium publishes original horticultural guides covering:
 - Germinating fresh Adenium seeds in Pakistan's climate
 
 ## 5. Contact & Ordering
-- **Website:** https://pakadenium.pk
+- **Website:** https://pak-adenium-nursery.vercel.app
 - **Phone:** +92 300 2560340
 - **WhatsApp:** https://wa.me/923002560340
 - **Email:** inquiry@pakadenium.pk

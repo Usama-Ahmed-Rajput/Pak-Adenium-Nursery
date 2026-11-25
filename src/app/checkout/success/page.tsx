@@ -57,7 +57,7 @@ export default async function OrderSuccessPage({ searchParams }: SuccessPageProp
     );
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pakadenium.pk";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pak-adenium-nursery.vercel.app";
   const whatsappUrl = buildOrderConfirmationWhatsApp(
     order,
     settings.general.whatsapp,

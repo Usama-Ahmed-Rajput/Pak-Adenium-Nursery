@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 import { getProducts, getArticles } from "@/lib/db";
+import { getSiteUrl } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://pakadenium.pk").replace(/\/$/, "");
+  const baseUrl = getSiteUrl();
 
   const [products, articles] = await Promise.all([
     getProducts(),

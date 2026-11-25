@@ -18,14 +18,14 @@
 - **Seeds & Nursery Care:** Hand-pollinated hybrid Adenium seeds (Pack of 20) and coarse mineral substrates (5kg Bag).
 
 ## Important URLs
-- Home: https://pakadenium.pk/
-- Plant Catalog: https://pakadenium.pk/shop
-- Plant Finder Quiz: https://pakadenium.pk/plant-finder
-- Growing Journal (Care Guides): https://pakadenium.pk/journal
-- About Pak Adenium: https://pakadenium.pk/about
-- Contact & WhatsApp Desk: https://pakadenium.pk/contact
-- Sitemap: https://pakadenium.pk/sitemap.xml
-- Extended AI Context: https://pakadenium.pk/llms-full.txt
+- Home: https://pak-adenium-nursery.vercel.app/
+- Plant Catalog: https://pak-adenium-nursery.vercel.app/shop
+- Plant Finder Quiz: https://pak-adenium-nursery.vercel.app/plant-finder
+- Growing Journal (Care Guides): https://pak-adenium-nursery.vercel.app/journal
+- About Pak Adenium: https://pak-adenium-nursery.vercel.app/about
+- Contact & WhatsApp Desk: https://pak-adenium-nursery.vercel.app/contact
+- Sitemap: https://pak-adenium-nursery.vercel.app/sitemap.xml
+- Extended AI Context: https://pak-adenium-nursery.vercel.app/llms-full.txt
 
 ## Contact Information
 - **Phone:** +92 300 2560340

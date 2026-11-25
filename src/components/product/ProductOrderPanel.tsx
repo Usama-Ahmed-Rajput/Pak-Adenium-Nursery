@@ -16,7 +16,7 @@ export default function ProductOrderPanel({ product, whatsappNumber }: ProductOr
   const { addToCart, setIsCartOpen } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
-  const [siteUrl, setSiteUrl] = useState("https://pakadenium.pk");
+  const [siteUrl, setSiteUrl] = useState("https://pak-adenium-nursery.vercel.app");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
