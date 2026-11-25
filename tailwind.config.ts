@@ -51,6 +51,7 @@ const config: Config = {
       fontFamily: {
         serif: ["var(--font-serif)", "DM Serif Display", "Georgia", "serif"],
         sans: ["var(--font-sans)", "Manrope", "system-ui", "-apple-system", "sans-serif"],
+        mono: ["Consolas", "Monaco", "Courier New", "monospace"],
       },
       borderRadius: {
         DEFAULT: "0.25rem",

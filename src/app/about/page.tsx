@@ -3,21 +3,45 @@ import { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getSiteSettings } from "@/lib/db";
+import { buildBreadcrumbSchema } from "@/lib/seo";
 import { Sparkles, Heart, Sun, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Our Propagation Story — Pak Adenium Nursery",
+  title: "About Pak Adenium — Desert Rose Nursery in Pakistan",
   description:
-    "Learn about Pak Adenium, our dedicated Desert Rose propagation grounds in Multan, and our passion for nurturing sculptural living botanical art in Pakistan.",
+    "Learn about Pak Adenium, our Desert Rose propagation grounds in Multan and Lahore, and our outdoor acclimation standards for Adenium plants in Pakistan.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "About Pak Adenium — Desert Rose Nursery in Pakistan",
+    description:
+      "Learn about Pak Adenium, our Desert Rose propagation grounds, and our passion for nurturing sculptural Adenium bonsai in Pakistan.",
+    url: "/about",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Pak Adenium — Desert Rose Nursery in Pakistan",
+    description:
+      "Specialist Adenium botanical nursery in Pakistan cultivating outdoor-acclimated Desert Rose plants and caudex bonsai.",
+  },
 };
 
 export const dynamic = "force-dynamic";
 
 export default async function AboutPage() {
   const settings = await getSiteSettings();
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "About Pak Adenium", path: "/about" },
+  ]);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}

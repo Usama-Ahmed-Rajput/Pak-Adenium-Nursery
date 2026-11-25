@@ -5,15 +5,32 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getArticles, getSiteSettings } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
+import { buildBreadcrumbSchema } from "@/lib/seo";
 import { BookOpen, Clock, ArrowRight } from "lucide-react";
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
+  const title = "The Growing Journal — Adenium Care & Cultivation Guides in Pakistan";
+  const description =
+    "Expert guides from Pak Adenium on cultivating Desert Rose plants in Pakistan: caudex fattening, root training, monsoon rot prevention, winter dormancy, and Adenium seed germination.";
+
   return {
-    title: "The Growing Journal — Adenium Care Protocols & Horticultural Notes",
-    description:
-      "Expert guides on cultivating Desert Rose plants in Pakistan. Learn caudex fattening, root training, monsoon rot prevention, and winter dormancy management.",
+    title,
+    description,
+    alternates: {
+      canonical: "/journal",
+    },
+    openGraph: {
+      title: `${title} | Pak Adenium`,
+      description,
+      url: "/journal",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | Pak Adenium`,
+      description,
+    },
   };
 }
 
@@ -25,8 +42,17 @@ export default async function JournalPage() {
     getSiteSettings(),
   ]);
 
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Growing Journal", path: "/journal" },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}

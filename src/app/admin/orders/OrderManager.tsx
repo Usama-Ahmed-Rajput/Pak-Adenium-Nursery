@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Order, OrderStatus, PaymentStatus } from "@/types";
 import { formatPrice, generateWhatsAppLink } from "@/lib/utils";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import {
   Search,
   Filter,
   Eye,
-  MessageCircle,
   Check,
   X,
   AlertCircle,
@@ -505,7 +505,7 @@ export default function OrderManager({ initialOrders, highlightId }: OrderManage
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#25D366] text-botanical-950 text-xs font-semibold flex items-center justify-center gap-2 shadow-subtle hover:bg-[#20ba59] transition-colors"
               >
-                <MessageCircle className="w-4 h-4 text-botanical-950" />
+                <WhatsAppIcon className="w-4 h-4 text-botanical-950" />
                 <span>Message Customer on WhatsApp</span>
               </a>
 

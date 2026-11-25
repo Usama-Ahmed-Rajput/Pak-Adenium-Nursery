@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
 import { getOrderByIdOrNumber, getSiteSettings } from "@/lib/db";
@@ -8,12 +9,17 @@ import PrintButton from "@/components/order/PrintButton";
 import {
   CheckCircle2,
   Printer,
-  MessageCircle,
   Truck,
   ArrowRight,
   ShieldCheck,
   Calendar,
 } from "lucide-react";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
+
+export const metadata: Metadata = {
+  title: "Order Confirmed | Pak Adenium",
+  robots: { index: false, follow: false },
+};
 
 interface SuccessPageProps {
   searchParams: Promise<{ order?: string }>;
@@ -89,7 +95,7 @@ export default async function OrderSuccessPage({ searchParams }: SuccessPageProp
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-botanical-950 font-semibold text-sm flex items-center justify-center gap-2 shadow-card transition-all"
               >
-                <MessageCircle className="w-4 h-4 text-botanical-950" />
+                <WhatsAppIcon className="w-4 h-4 text-botanical-950" />
                 <span>Confirm Order via WhatsApp</span>
               </a>
 

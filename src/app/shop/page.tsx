@@ -4,14 +4,31 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CatalogView from "@/components/shop/CatalogView";
 import { getProducts, getCategories, getSiteSettings } from "@/lib/db";
+import { buildBreadcrumbSchema } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const title = "Buy Adenium Plants & Desert Rose Bonsai in Pakistan";
+  const description =
+    "Shop grafted multi-petal Adenium plants, Adenium Arabicum caudex bonsai, rare Dorset Horn hybrids, fresh Adenium seeds, and mineral substrates at Pak Adenium with nationwide delivery.";
+
   return {
-    title: "Desert Rose Plants & Bonsai Catalog — Pak Adenium Nursery",
-    description:
-      "Explore hand-selected Desert Rose plants, grafted multi-petal varieties, and rare collector bonsai in Pakistan. Nationwide live delivery.",
+    title,
+    description,
+    alternates: {
+      canonical: "/shop",
+    },
+    openGraph: {
+      title: `${title} | Pak Adenium`,
+      description,
+      url: "/shop",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | Pak Adenium`,
+      description,
+    },
   };
 }
 
@@ -22,8 +39,17 @@ export default async function ShopPage() {
     getSiteSettings(),
   ]);
 
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Shop Adenium Plants", path: "/shop" },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}

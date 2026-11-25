@@ -1,0 +1,47 @@
+# Pak Adenium — Extended Brand, Catalog & Horticultural Reference
+
+> Pak Adenium is Pakistan's specialist botanical nursery for Desert Rose (*Adenium*) cultivation, founded in 2018 and operating from Multan & Lahore dispatch hubs with nationwide live plant delivery across Pakistan.
+
+## 1. Brand Identity & Cultivation Standards
+- **Primary Brand:** Pak Adenium (Pak Adenium Nursery)
+- **Specialization:** Outdoor-acclimated Desert Rose (*Adenium obesum*, *Adenium arabicum*, *Adenium socotranum* hybrids, and *Dorset Horn* varieties), root-trained caudex bonsai, hand-pollinated Adenium seeds, and monsoon-safe mineral potting media.
+- **Acclimation Standard:** Unlike fragile greenhouse imports grown in heavy wet peat, Pak Adenium plants are grown outdoors under Pakistan's natural sun (routine summer temperatures above 45°C) in fast-draining mineral substrates.
+- **Key Horticultural Practices:**
+  1. Root-trained bonsai architecture using horizontal discs in shallow pans for radial root flares.
+  2. Monsoon-safe coarse mineral substrates (pumice, gravel, charcoal) to prevent caudex rot.
+  3. Verified multi-petal lineages grafted from documented mother stock.
+
+## 2. Plant Categories
+1. **Grafted Varieties** (`/shop?category=grafted-varieties`): Multi-petal layered blooms grafted onto 2–3 year acclimated rootstocks.
+2. **Adenium Arabicum** (`/shop?category=adenium-arabicum`): Massive, sculptural caudex formations, wide branching, and natural bonsai silhouettes.
+3. **Rare & Collector Hybrids** (`/shop?category=rare-collector-hybrids`): Limited specimens including Dorset Horn and Thai Socotranum.
+4. **Adenium Obesum** (`/shop?category=adenium-obesum`): Resilient Desert Rose cultivars with profuse seasonal blooms.
+5. **Specimen Bonsai** (`/shop?category=specimen-bonsai`): Mature 4 to 8 year root-trained Adeniums.
+6. **Seeds & Nursery Care** (`/shop?category=seeds-nursery-care`): Hand-harvested fresh hybrid seed pods and mineral potting mixes.
+
+## 3. Catalog Highlights (Verified Inventory)
+- **Dorset Horn Adenium 'Khao Hin Khon'** (SKU: `PAK-DH-001`) — Adenium Hybrid, Rs. 6,500
+- **Triple Black King (Velvet Midnight)** (SKU: `PAK-GR-002`) — Adenium Obesum, Rs. 4,500
+- **Super Baobab Arabicum Specimen** (SKU: `PAK-AR-003`) — Adenium Arabicum, Rs. 12,000
+- **White Diamond (Pristine Triple Bloom)** (SKU: `PAK-GR-004`) — Adenium Obesum, Rs. 3,800
+- **Star of Pakistan (Ruby & Gold Bi-Color)** (SKU: `PAK-HY-005`) — Adenium Hybrid, Rs. 5,500
+- **Thai Socotranum 'Golden Crown' Bonsai** (SKU: `PAK-SO-006`) — Adenium Socotranum Hybrid, Rs. 24,500
+- **Desert Sunset (Warm Apricot Yellow)** (SKU: `PAK-GR-007`) — Adenium Obesum, Rs. 5,800
+- **Hand-Pollinated Hybrid Seeds (Pack of 20)** (SKU: `PAK-SD-008`) — Adenium Obesum & Arabicum crosses, Rs. 1,500
+- **Artisan Coarse Mineral Substrate (5kg Bag)** (SKU: `PAK-MED-009`) — Botanical Growing Media, Rs. 1,450
+
+## 4. Growing Journal & Care Topics (`/journal`)
+Pak Adenium publishes original horticultural guides covering:
+- Caudex fattening and radial root training for Desert Rose bonsai
+- Monsoon rot prevention and drainage management in Pakistan
+- Winter dormancy care and pruning schedules
+- Germinating fresh Adenium seeds in Pakistan's climate
+
+## 5. Contact & Ordering
+- **Website:** https://pakadenium.pk
+- **Phone:** +92 300 2560340
+- **WhatsApp:** https://wa.me/923002560340
+- **Email:** inquiry@pakadenium.pk
+- **Address:** Pak Adenium Botanical Farm, Nursery Sector, Multan & Lahore Dispatch Hub, Pakistan
+- **Accepted Payments:** Cash, Bank Transfer, EasyPaisa, JazzCash
+

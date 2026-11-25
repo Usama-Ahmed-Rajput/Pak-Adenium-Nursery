@@ -244,7 +244,7 @@ export default async function AdminDashboardOverview() {
                   <h4 className="font-medium text-botanical-950 truncate">{p.name}</h4>
                   <span className="text-[10px] text-charcoal-muted font-mono">{p.sku}</span>
                 </div>
-                <div className="text-right flex-shrink-0">
+                <div className="text-right flex-shrink-0 flex items-center gap-2">
                   <span
                     className={`font-mono font-bold px-2 py-0.5 rounded ${
                       p.stock_quantity === 0
@@ -254,6 +254,12 @@ export default async function AdminDashboardOverview() {
                   >
                     {p.stock_quantity === 0 ? "0 left" : `${p.stock_quantity} left`}
                   </span>
+                  <Link
+                    href={`/admin/inventory?edit=${p.id}`}
+                    className="px-2 py-1 rounded-lg bg-botanical-900 hover:bg-botanical-950 text-ivory text-[10px] font-semibold transition-colors"
+                  >
+                    Edit
+                  </Link>
                 </div>
               </div>
             ))}

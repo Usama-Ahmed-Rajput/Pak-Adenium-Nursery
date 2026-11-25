@@ -5,9 +5,14 @@ import InventoryManager from "./InventoryManager";
 
 export const revalidate = 0;
 
-export default async function AdminInventoryPage() {
+export default async function AdminInventoryPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ edit?: string }>;
+}) {
   await requireAdmin();
-  const [products, categories] = await Promise.all([
+  const [{ edit }, products, categories] = await Promise.all([
+    searchParams,
     getAllProductsAdmin(),
     getCategories(),
   ]);
@@ -22,11 +27,15 @@ export default async function AdminInventoryPage() {
           Inventory Tracking & Stock Management
         </h1>
         <p className="text-xs text-charcoal-muted mt-1">
-          Monitor plant stock counts in real time, set thresholds, and prevent overselling.
+          Monitor plant stock counts in real time, edit product names, photos, prices, and prevent overselling.
         </p>
       </div>
 
-      <InventoryManager initialProducts={products} categories={categories} />
+      <InventoryManager
+        initialProducts={products}
+        categories={categories}
+        initialEditId={edit}
+      />
     </div>
   );
 }

@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Product } from "@/types";
 import { formatPrice, buildProductInquiryWhatsApp } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
-import { ShoppingBag, MessageCircle, Plus, Minus, Check, Truck } from "lucide-react";
+import { ShoppingBag, Plus, Minus, Check, Truck } from "lucide-react";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 interface ProductOrderPanelProps {
   product: Product;
@@ -134,7 +135,7 @@ export default function ProductOrderPanel({ product, whatsappNumber }: ProductOr
           rel="noopener noreferrer"
           className="w-full py-3 px-6 rounded-md border border-[#25D366]/40 bg-emerald-50 hover:bg-emerald-100/60 text-[#128C7E] font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
         >
-          <MessageCircle className="w-4 h-4 text-[#25D366]" />
+          <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
           <span>Inquire or Order via WhatsApp</span>
         </a>
       </div>

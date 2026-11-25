@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { formatPrice, generateWhatsAppLink } from "@/lib/utils";
-import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, MessageCircle } from "lucide-react";
+import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight } from "lucide-react";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 import { SiteSettings } from "@/types";
 
 export default function CartDrawer() {
@@ -256,7 +257,7 @@ export default function CartDrawer() {
                   rel="noopener noreferrer"
                   className="w-full py-3 px-4 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/40 text-[#128C7E] font-medium text-sm flex items-center justify-center gap-2 transition-all"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <WhatsAppIcon className="w-4 h-4" />
                   Order / Confirm via WhatsApp
                 </a>
               </div>

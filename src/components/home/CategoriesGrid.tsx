@@ -46,8 +46,9 @@ export default function CategoriesGrid({ categories }: CategoriesGridProps) {
               <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#F5F2EB]">
                 <img
                   src={category.image_url}
-                  alt={category.name}
+                  alt={`${category.name} — Adenium Plants at Pak Adenium Pakistan`}
                   loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                 />
               </div>

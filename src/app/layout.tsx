@@ -4,6 +4,7 @@ import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { getSiteSettings } from "@/lib/db";
+import { buildOrganizationSchema, buildWebsiteSchema, getSiteUrl } from "@/lib/seo";
 
 const dmSerif = DM_Serif_Display({
   weight: ["400"],
@@ -23,24 +24,27 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   const siteName = settings.general.nursery_name || "Pak Adenium";
   const tagline = settings.general.tagline || "Living Sculptures. Grown with Care.";
-  const metaTitle = settings.seo?.meta_title || `${siteName} — Premium Desert Rose Nursery Pakistan`;
+  const metaTitle = settings.seo?.meta_title || `${siteName} — Buy Adenium & Desert Rose Plants in Pakistan`;
   const metaDescription =
     settings.seo?.meta_description ||
-    "Pakistan's premier botanical nursery specializing in rare Desert Rose (Adenium) plants, multi-petal grafted blooms, sculptural Arabicum caudex bonsai, and fresh seeds. Nationwide safe delivery.";
+    "Pak Adenium is Pakistan's premier botanical nursery for Desert Rose (Adenium) plants, grafted multi-petal blooms, Adenium Arabicum caudex bonsai, and fresh Adenium seeds with nationwide delivery.";
+  const ogImage =
+    settings.seo?.og_image ||
+    "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=1200&auto=format&fit=crop";
   const metaKeywords =
     settings.seo?.meta_keywords && settings.seo.meta_keywords.length > 0
       ? settings.seo.meta_keywords
       : [
-          "Adenium Pakistan",
-          "Desert Rose plants",
+          "Pak Adenium",
+          "Pak Adenium Pakistan",
+          "Adenium Plants in Pakistan",
+          "Buy Adenium Plants in Pakistan",
+          "Desert Rose Plants Pakistan",
+          "Adenium Seeds Pakistan",
+          "Adenium Nursery Pakistan",
           "Grafted Adenium",
           "Adenium Arabicum bonsai",
           "Adenium Obesum",
-          "Dorset Horn Adenium",
-          "Buy Adenium online Pakistan",
-          "Adenium seeds Pakistan",
-          "Lahore plant nursery",
-          "Karachi succulent delivery",
         ];
 
   return {
@@ -52,7 +56,10 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: metaKeywords,
     authors: [{ name: `${siteName} Nursery` }],
     creator: `${siteName} Horticultural Farms`,
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+    metadataBase: new URL(getSiteUrl()),
+    alternates: {
+      canonical: "/",
+    },
     openGraph: {
       type: "website",
       locale: "en_PK",
@@ -62,16 +69,29 @@ export async function generateMetadata(): Promise<Metadata> {
       description: metaDescription,
       images: [
         {
-          url: settings.seo?.og_image || "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=1200&auto=format&fit=crop",
+          url: ogImage,
           width: 1200,
           height: 630,
-          alt: `${siteName} Desert Rose Collection`,
+          alt: `${siteName} Desert Rose & Adenium Collection in Pakistan`,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaTitle,
+      description: metaDescription,
+      images: [ogImage],
     },
     robots: {
       index: true,
       follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
   };
 }
@@ -83,32 +103,24 @@ export default async function RootLayout({
 }>) {
   const settings = await getSiteSettings();
 
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "GardenStore",
-    name: settings.general.nursery_name,
-    description: "Specialist Adenium botanical nursery propagating Desert Roses in Pakistan.",
-    telephone: settings.general.phone,
-    email: settings.general.email,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: settings.general.address,
-      addressCountry: "PK",
-    },
-    currenciesAccepted: "PKR",
-    paymentAccepted: "Cash, Bank Transfer, EasyPaisa, JazzCash",
-    priceRange: "₨1,500 - ₨35,000",
-  };
+  const organizationSchema = buildOrganizationSchema(settings);
+  const websiteSchema = buildWebsiteSchema(settings.general.nursery_name);
 
   return (
-    <html lang="en" className={`${dmSerif.variable} ${manrope.variable}`}>
+    <html lang="en" dir="ltr" translate="no" className={`notranslate ${dmSerif.variable} ${manrope.variable}`}>
       <head>
+        <meta httpEquiv="Content-Language" content="en" />
+        <meta name="google" content="notranslate" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
       </head>
-      <body className="antialiased min-h-screen flex flex-col bg-ivory text-botanical-950 font-sans">
+      <body translate="no" className="notranslate antialiased min-h-screen flex flex-col bg-ivory text-botanical-950 font-sans">
         <CartProvider>
           {children}
           <CartDrawer />

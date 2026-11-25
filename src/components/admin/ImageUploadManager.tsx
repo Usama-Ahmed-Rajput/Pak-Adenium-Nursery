@@ -24,14 +24,21 @@ export default function ImageUploadManager({
   const [urlInput, setUrlInput] = useState("");
   const [showUrlInput, setShowUrlInput] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = async (files: FileList | File[]) => {
+  const handleFileUpload = async (files: FileList | File[], replacePrimary = false) => {
     if (!files || files.length === 0) return;
     setIsUploading(true);
     setErrorMessage("");
 
     try {
-      const newImages: ProductImage[] = [...images];
+      // Strip synthetic fallback image if the user is uploading a real photo
+      const baseImages: ProductImage[] = images.filter(
+        (img) => !String(img.id || "").startsWith("img-fallback-")
+      );
+      const newImages: ProductImage[] = replacePrimary
+        ? baseImages.map((img) => ({ ...img, is_primary: false }))
+        : [...baseImages];
 
       for (let i = 0; i < files.length; i++) {
         if (newImages.length >= maxImages) {
@@ -53,17 +60,28 @@ export default function ImageUploadManager({
           throw new Error(data.error || `Failed to upload ${file.name}`);
         }
 
-        const isFirst = newImages.length === 0;
-        newImages.push({
+        const makePrimary = replacePrimary ? i === 0 : newImages.length === 0;
+        const uploadedImage: ProductImage = {
           id: "img-" + Math.random().toString(36).substring(2, 8),
           image_url: data.url,
           alt_text: file.name.replace(/\.[^/.]+$/, ""),
-          is_primary: isFirst,
-          display_order: newImages.length + 1,
-        });
+          is_primary: makePrimary,
+          display_order: makePrimary ? 1 : newImages.length + 1,
+        };
+
+        if (makePrimary) {
+          newImages.unshift(uploadedImage);
+        } else {
+          newImages.push(uploadedImage);
+        }
       }
 
-      onChange(newImages);
+      onChange(
+        newImages.map((img, idx) => ({
+          ...img,
+          display_order: idx + 1,
+        }))
+      );
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Error uploading file";
       setErrorMessage(msg);
@@ -72,30 +90,44 @@ export default function ImageUploadManager({
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
+      if (replaceInputRef.current) {
+        replaceInputRef.current.value = "";
+      }
     }
   };
 
-  const handleAddUrl = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!urlInput.trim()) return;
+  const handleAddUrl = (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
+    const trimmed = urlInput.trim();
+    if (!trimmed) return;
 
-    try {
-      new URL(urlInput); // Validate format
-    } catch {
-      setErrorMessage("Please enter a valid HTTP/HTTPS image URL.");
-      return;
+    const isRelativeUpload = trimmed.startsWith("/");
+    if (!isRelativeUpload) {
+      try {
+        const parsed = new URL(trimmed);
+        if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+          setErrorMessage("Please enter a valid HTTP/HTTPS image URL or /uploads/ path.");
+          return;
+        }
+      } catch {
+        setErrorMessage("Please enter a valid HTTP/HTTPS image URL or /uploads/ path.");
+        return;
+      }
     }
 
-    const isFirst = images.length === 0;
+    const baseImages = images.filter(
+      (img) => !String(img.id || "").startsWith("img-fallback-")
+    );
+    const isFirst = baseImages.length === 0;
     const newImage: ProductImage = {
       id: "img-" + Math.random().toString(36).substring(2, 8),
-      image_url: urlInput.trim(),
+      image_url: trimmed,
       alt_text: "Product photograph",
       is_primary: isFirst,
-      display_order: images.length + 1,
+      display_order: baseImages.length + 1,
     };
 
-    onChange([...images, newImage]);
+    onChange([...baseImages, newImage]);
     setUrlInput("");
     setShowUrlInput(false);
     setErrorMessage("");
@@ -126,7 +158,26 @@ export default function ImageUploadManager({
           {helperText && <p className="text-[11px] text-charcoal-muted">{helperText}</p>}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            ref={replaceInputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/avif,image/gif"
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files) handleFileUpload(e.target.files, true);
+            }}
+          />
+          <button
+            type="button"
+            disabled={isUploading}
+            onClick={() => replaceInputRef.current?.click()}
+            className="px-2.5 py-1 rounded-lg bg-botanical-100 hover:bg-botanical-200 text-botanical-900 text-[11px] font-semibold inline-flex items-center gap-1 transition-colors disabled:opacity-50"
+          >
+            <UploadCloud className="w-3 h-3" />
+            Change Main Photo
+          </button>
+
           <button
             type="button"
             onClick={() => setShowUrlInput(!showUrlInput)}
@@ -149,15 +200,21 @@ export default function ImageUploadManager({
       {showUrlInput && (
         <div className="flex gap-2">
           <input
-            type="url"
+            type="text"
             value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddUrl();
+              }
+            }}
             placeholder="https://images.unsplash.com/... or /uploads/..."
             className="flex-1 bg-ivory border border-botanical-300 rounded-xl px-3 py-2 text-xs text-botanical-950 focus:outline-none focus:border-botanical-700 font-mono"
           />
           <button
             type="button"
-            onClick={handleAddUrl}
+            onClick={() => handleAddUrl()}
             className="px-4 py-2 bg-botanical-900 text-ivory text-xs font-medium rounded-xl hover:bg-botanical-950"
           >
             Add Image
@@ -236,7 +293,7 @@ export default function ImageUploadManager({
                 <button
                   type="button"
                   onClick={() => handleSetPrimary(idx)}
-                  className="absolute top-1.5 left-1.5 bg-black/60 hover:bg-clay text-white text-[9px] font-medium px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5"
+                  className="absolute top-1.5 left-1.5 bg-black/70 hover:bg-clay text-white text-[9px] font-medium px-1.5 py-0.5 rounded opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex items-center gap-0.5"
                   title="Make this primary photograph"
                 >
                   <Star className="w-2.5 h-2.5" />
@@ -248,7 +305,7 @@ export default function ImageUploadManager({
               <button
                 type="button"
                 onClick={() => handleRemove(idx)}
-                className="absolute top-1.5 right-1.5 bg-red-600 hover:bg-red-700 text-white p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                className="absolute top-1.5 right-1.5 bg-red-600 hover:bg-red-700 text-white p-1 rounded-md opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shadow-sm"
                 title="Remove image"
               >
                 <Trash2 className="w-3 h-3" />

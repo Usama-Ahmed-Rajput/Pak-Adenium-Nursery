@@ -4,21 +4,46 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ContactForm from "@/components/contact/ContactForm";
 import { getSiteSettings } from "@/lib/db";
-import { MessageCircle, Phone, Mail, MapPin, Clock } from "lucide-react";
+import { buildBreadcrumbSchema } from "@/lib/seo";
+import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 export const metadata: Metadata = {
   title: "Contact Pak Adenium Nursery — WhatsApp & Farm Inquiries",
   description:
-    "Get in touch with Pak Adenium Nursery. Inquire about current blooming varieties, order assistance, and live plant dispatch across Pakistan.",
+    "Contact Pak Adenium Nursery in Pakistan for Adenium plant availability, Desert Rose care advice, Adenium seeds, and nationwide live plant dispatch.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Contact Pak Adenium Nursery — WhatsApp & Inquiries",
+    description:
+      "Reach Pak Adenium via WhatsApp, phone, or email for Desert Rose plants and nationwide delivery in Pakistan.",
+    url: "/contact",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Pak Adenium Nursery",
+    description:
+      "Get in touch with Pak Adenium for Desert Rose plants, Adenium seeds, and dispatch across Pakistan.",
+  },
 };
 
 export const dynamic = "force-dynamic";
 
 export default async function ContactPage() {
   const settings = await getSiteSettings();
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Contact Pak Adenium", path: "/contact" },
+  ]);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Navbar
         announcement={settings.announcement}
         whatsappNumber={settings.general.whatsapp}
@@ -64,7 +89,7 @@ export default async function ContactPage() {
                 rel="noopener noreferrer"
                 className="w-full py-3.5 px-4 rounded-xl bg-[#25D366] text-botanical-950 font-semibold text-xs flex items-center justify-center gap-2 shadow-subtle hover:bg-[#20ba59] transition-colors"
               >
-                <MessageCircle className="w-4 h-4 text-botanical-950" />
+                <WhatsAppIcon className="w-4 h-4 text-botanical-950" />
                 <span>Chat on WhatsApp ({settings.general.phone || `+${settings.general.whatsapp}`})</span>
               </a>
 

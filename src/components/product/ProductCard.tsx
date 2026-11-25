@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Product } from "@/types";
 import { formatPrice, buildProductInquiryWhatsApp } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
-import { ShoppingBag, MessageCircle, Check } from "lucide-react";
+import { ShoppingBag, Check } from "lucide-react";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 interface ProductCardProps {
   product: Product;
@@ -58,8 +59,9 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
       >
         <img
           src={primaryImage}
-          alt={product.name}
+          alt={`${product.name} (${product.species}) — Pak Adenium Pakistan`}
           loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
         />
 
@@ -162,7 +164,7 @@ export default function ProductCard({ product, whatsappNumber }: ProductCardProp
               title="Inquire about this plant on WhatsApp"
               aria-label={`Inquire about ${product.name} on WhatsApp`}
             >
-              <MessageCircle className="w-4 h-4" />
+              <WhatsAppIcon className="w-4 h-4" />
             </a>
           </div>
         </div>

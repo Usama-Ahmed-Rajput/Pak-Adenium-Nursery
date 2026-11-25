@@ -6,6 +6,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getArticleBySlug, getArticles, getSiteSettings } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
+import { buildBreadcrumbSchema, getSiteUrl } from "@/lib/seo";
 import { ChevronRight, Clock, BookOpen, User, Share2, ArrowLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -21,13 +22,30 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   const article = await getArticleBySlug(slug);
   if (!article) return { title: "Article Not Found" };
 
+  const title = article.seo_title || `${article.title} — Pak Adenium Journal`;
+  const description = article.seo_description || article.excerpt;
+
   return {
-    title: article.seo_title || `${article.title} — Pak Adenium Journal`,
-    description: article.seo_description || article.excerpt,
+    title,
+    description,
+    alternates: {
+      canonical: `/journal/${article.slug}`,
+    },
     openGraph: {
+      type: "article",
       title: article.title,
       description: article.excerpt,
-      images: [{ url: article.featured_image }],
+      url: `/journal/${article.slug}`,
+      publishedTime: article.created_at,
+      modifiedTime: article.updated_at || article.created_at,
+      authors: [article.author_name],
+      images: [{ url: article.featured_image, alt: article.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [article.featured_image],
     },
   };
 }
@@ -47,6 +65,8 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
   const relatedArticles = allArticles.filter((a) => a.id !== article.id).slice(0, 2);
 
   // JSON-LD Schema
+  const siteUrl = getSiteUrl();
+  const articleUrl = `${siteUrl}/journal/${article.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -54,21 +74,37 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     description: article.excerpt,
     image: [article.featured_image],
     datePublished: article.created_at,
+    dateModified: article.updated_at || article.created_at,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": articleUrl,
+    },
     author: {
       "@type": "Person",
       name: article.author_name,
     },
     publisher: {
       "@type": "Organization",
-      name: settings.general.nursery_name,
+      name: settings.general.nursery_name || "Pak Adenium",
+      url: siteUrl,
     },
   };
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Growing Journal", path: "/journal" },
+    { name: article.title, path: `/journal/${article.slug}` },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <Navbar
         announcement={settings.announcement}

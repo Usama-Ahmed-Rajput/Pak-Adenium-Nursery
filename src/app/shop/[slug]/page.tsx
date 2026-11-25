@@ -9,6 +9,7 @@ import ProductOrderPanel from "@/components/product/ProductOrderPanel";
 import ProductCard from "@/components/product/ProductCard";
 import { getProductBySlug, getProducts, getSiteSettings } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
+import { buildBreadcrumbSchema, getSiteUrl } from "@/lib/seo";
 import {
   Sun,
   Droplets,
@@ -36,25 +37,38 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 
   const priceFormatted = formatPrice(product.sale_price ?? product.price);
+  const title = product.seo_title || `${product.name} — Buy Adenium in Pakistan`;
+  const description =
+    product.seo_description ||
+    `Buy authentic ${product.name} (${product.species}) at Pak Adenium Nursery. ${priceFormatted}. Safe nationwide delivery across Pakistan.`;
+  const primaryImg =
+    product.images[0]?.image_url ||
+    "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=1200&auto=format&fit=crop";
 
   return {
-    title: product.seo_title || `${product.name} — Desert Rose Plant`,
-    description:
-      product.seo_description ||
-      `Buy authentic ${product.name} (${product.species}) at Pak Adenium Nursery. ${priceFormatted}. Safe delivery in Pakistan.`,
+    title,
+    description,
+    alternates: {
+      canonical: `/shop/${product.slug}`,
+    },
     openGraph: {
-      title: `${product.name} | Pak Adenium Nursery`,
+      title: `${product.name} | Pak Adenium`,
       description: product.description.substring(0, 160),
+      url: `/shop/${product.slug}`,
       images: [
         {
-          url:
-            product.images[0]?.image_url ||
-            "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=1200&auto=format&fit=crop",
+          url: primaryImg,
           width: 1200,
           height: 630,
-          alt: product.name,
+          alt: `${product.name} — Pak Adenium Pakistan`,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [primaryImg],
     },
   };
 }
@@ -76,21 +90,25 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   });
   const filteredRelated = relatedProducts.filter((p) => p.id !== product.id).slice(0, 3);
 
-  // JSON-LD structured data for Google Search
+  // JSON-LD structured data for Google Search & AI engines
+  const siteUrl = getSiteUrl();
+  const productUrl = `${siteUrl}/shop/${product.slug}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
+    url: productUrl,
     image: product.images.map((img) => img.image_url),
     description: product.description,
     sku: product.sku,
+    category: product.category_name || product.species,
     brand: {
       "@type": "Brand",
-      name: "Pak Adenium Nursery",
+      name: "Pak Adenium",
     },
     offers: {
       "@type": "Offer",
-      url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://pakadenium.pk"}/shop/${product.slug}`,
+      url: productUrl,
       priceCurrency: "PKR",
       price: product.sale_price ?? product.price,
       availability:
@@ -98,14 +116,28 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
+      seller: {
+        "@type": "Organization",
+        name: settings.general.nursery_name || "Pak Adenium",
+      },
     },
   };
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Shop", path: "/shop" },
+    { name: product.name, path: `/shop/${product.slug}` },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <Navbar
         announcement={settings.announcement}

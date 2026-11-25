@@ -12,8 +12,8 @@ import {
   RotateCcw,
   Sparkles,
   Check,
-  MessageCircle,
 } from "lucide-react";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 interface Question {
   id: string;
@@ -361,7 +361,7 @@ export default function PlantFinderPage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#25D366] text-botanical-950 font-semibold text-xs transition-colors shadow-subtle"
                 >
-                  <MessageCircle className="w-4 h-4 text-botanical-950" />
+                  <WhatsAppIcon className="w-4 h-4 text-botanical-950" />
                   Chat with Nursery Specialist
                 </a>
               </div>

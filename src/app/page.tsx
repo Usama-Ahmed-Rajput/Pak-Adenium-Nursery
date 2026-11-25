@@ -7,6 +7,7 @@ import CuratedCollectionSection from "@/components/home/CuratedCollectionSection
 import CategoriesGrid from "@/components/home/CategoriesGrid";
 import PlantFinderBanner from "@/components/home/PlantFinderBanner";
 import JournalHighlights from "@/components/home/JournalHighlights";
+import AdeniumFaqSection from "@/components/home/AdeniumFaqSection";
 import { getProducts, getCategories, getArticles, getSiteSettings } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -48,6 +49,7 @@ export default async function HomePage() {
         <CategoriesGrid categories={categories} />
         <PlantFinderBanner />
         <JournalHighlights articles={articles} />
+        <AdeniumFaqSection />
       </main>
       <Footer
         nurseryName={settings.general.nursery_name}

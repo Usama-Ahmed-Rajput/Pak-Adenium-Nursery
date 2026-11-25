@@ -9,11 +9,11 @@ import {
   Users,
   ShoppingBag,
   Banknote,
-  MessageCircle,
   ExternalLink,
   MapPin,
   Calendar,
 } from "lucide-react";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 interface CustomerManagerProps {
   initialCustomers: Customer[];
@@ -164,7 +164,7 @@ export default function CustomerManager({ initialCustomers }: CustomerManagerPro
                         className="px-3 py-1.5 rounded-lg bg-[#25D366] text-botanical-950 font-semibold inline-flex items-center gap-1.5 shadow-subtle hover:bg-[#20ba59] transition-colors"
                         title="Chat on WhatsApp"
                       >
-                        <MessageCircle className="w-3.5 h-3.5" />
+                        <WhatsAppIcon className="w-3.5 h-3.5" />
                         <span>WhatsApp</span>
                       </a>
                     </div>

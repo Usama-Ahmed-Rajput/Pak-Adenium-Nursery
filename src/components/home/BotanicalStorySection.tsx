@@ -25,7 +25,9 @@ export default function BotanicalStorySection({
             <div className="relative rounded-lg overflow-hidden bg-[#F5F2EB] border border-[#E5E0D8] shadow-sm">
               <img
                 src="https://images.unsplash.com/photo-1509423350716-97f9360b4e09?q=80&w=1200&auto=format&fit=crop"
-                alt="Mature Adenium Arabicum Caudex Bonsai"
+                alt="Mature Adenium Arabicum Caudex Bonsai at Pak Adenium Nursery Pakistan"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-[480px] sm:h-[520px] object-cover transition-transform duration-700 hover:scale-[1.02]"
               />
 

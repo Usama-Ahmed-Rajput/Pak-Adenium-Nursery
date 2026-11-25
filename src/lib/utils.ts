@@ -7,13 +7,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPrice(amount: number): string {
-  return `Rs. ${Math.round(amount).toLocaleString("en-PK")}`;
+  return `Rs. ${Math.round(amount).toLocaleString("en-US")}`;
 }
 
 export function formatDate(dateString: string): string {
   try {
     const d = new Date(dateString);
-    return d.toLocaleDateString("en-PK", {
+    return d.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",

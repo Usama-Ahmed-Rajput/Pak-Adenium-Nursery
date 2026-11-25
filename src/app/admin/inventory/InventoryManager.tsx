@@ -26,9 +26,10 @@ import {
 interface InventoryManagerProps {
   initialProducts: Product[];
   categories: Category[];
+  initialEditId?: string;
 }
 
-export default function InventoryManager({ initialProducts, categories }: InventoryManagerProps) {
+export default function InventoryManager({ initialProducts, categories, initialEditId }: InventoryManagerProps) {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [search, setSearch] = useState("");
@@ -36,9 +37,15 @@ export default function InventoryManager({ initialProducts, categories }: Invent
   const [stockFilter, setStockFilter] = useState<"all" | "in_stock" | "low_stock" | "out_of_stock">("all");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
+  const initialMatch = initialEditId
+    ? initialProducts.find((p) => p.id === initialEditId) ?? null
+    : null;
+
   // Edit Modal State
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(
+    initialMatch ? { ...initialMatch, images: initialMatch.images ? [...initialMatch.images] : [] } : null
+  );
+  const [isModalOpen, setIsModalOpen] = useState(Boolean(initialMatch));
   const [isSaving, setIsSaving] = useState(false);
   const [formError, setFormError] = useState("");
   const [isDirty, setIsDirty] = useState(false);
@@ -274,18 +281,18 @@ export default function InventoryManager({ initialProducts, categories }: Invent
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-botanical-200 shadow-subtle">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+      <div className="bg-white p-4 rounded-2xl border border-botanical-200 shadow-subtle">
+        <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
-          <div className="relative flex-1">
+          <div className="relative w-44 flex-shrink-0">
             <input
               type="text"
-              placeholder="Filter by product name, SKU, variety..."
+              placeholder="Search name, SKU..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-ivory border border-botanical-300 rounded-xl pl-9 pr-4 py-2 text-xs text-botanical-950 focus:outline-none focus:border-botanical-700"
+              className="w-full bg-ivory border border-botanical-300 rounded-xl pl-8 pr-3 py-2 text-xs text-botanical-950 focus:outline-none focus:border-botanical-700"
             />
-            <Search className="w-4 h-4 text-botanical-400 absolute left-3 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-botanical-400 absolute left-2.5 top-2.5" />
           </div>
 
           {/* Category Dropdown */}
@@ -314,26 +321,33 @@ export default function InventoryManager({ initialProducts, categories }: Invent
             <option value="out_of_stock">Out of Stock Only</option>
           </select>
         </div>
-
-        <div className="text-xs text-charcoal-muted self-end lg:self-center">
-          Showing <span className="font-semibold text-botanical-950">{filtered.length}</span> products
-        </div>
       </div>
 
-      {/* Inventory Table */}
-      <div className="rounded-2xl bg-white border border-botanical-200/80 shadow-subtle overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Showing count — above table, left-aligned */}
+      <div className="flex items-center justify-between px-1">
+        <p className="text-xs text-charcoal-muted">
+          Showing{" "}
+          <span className="font-bold text-botanical-950 text-sm">{filtered.length}</span>
+          {" "}of{" "}
+          <span className="font-semibold text-botanical-950">{products.length}</span>
+          {" "}products
+        </p>
+      </div>
+
+      {/* Inventory Table (Desktop & Tablet) */}
+      <div className="hidden md:block rounded-2xl bg-white border border-botanical-200/80 shadow-subtle overflow-hidden">
+        <div className="overflow-x-auto w-full">
           <table className="w-full text-left text-xs">
             <thead className="bg-botanical-50 border-b border-botanical-200 text-botanical-800">
               <tr>
-                <th className="py-3 px-4 font-semibold">Product &amp; Variety</th>
-                <th className="py-3 px-4 font-semibold">Category</th>
-                <th className="py-3 px-4 font-semibold">SKU</th>
-                <th className="py-3 px-4 font-semibold text-right">Unit Price</th>
-                <th className="py-3 px-4 font-semibold text-center">Alert Status</th>
-                <th className="py-3 px-4 font-semibold text-center">Current Stock</th>
-                <th className="py-3 px-4 font-semibold text-center">Quick Adjust</th>
-                <th className="py-3 px-4 font-semibold text-right">Actions</th>
+                <th className="py-3 px-2 xl:px-3 font-semibold">Product &amp; Variety</th>
+                <th className="py-3 px-2 xl:px-3 font-semibold hidden xl:table-cell">Category</th>
+                <th className="py-3 px-2 xl:px-3 font-semibold whitespace-nowrap hidden xl:table-cell">SKU</th>
+                <th className="py-3 px-2 xl:px-3 font-semibold text-right">Unit Price</th>
+                <th className="py-3 px-2 xl:px-3 font-semibold text-center">Alert Status</th>
+                <th className="py-3 px-1.5 xl:px-3 font-semibold text-center">Stock</th>
+                <th className="py-3 px-1.5 xl:px-3 font-semibold text-center">Quick Adjust</th>
+                <th className="py-3 px-2 xl:px-4 font-semibold text-right whitespace-nowrap">Preview</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-botanical-100">
@@ -341,60 +355,70 @@ export default function InventoryManager({ initialProducts, categories }: Invent
                 const isOut = prod.stock_quantity === 0;
                 const isLow = prod.stock_quantity <= prod.low_stock_threshold && !isOut;
                 const isUpdating = updatingId === prod.id;
+                const primaryThumb =
+                  prod.images?.find((img) => img.is_primary)?.image_url ||
+                  prod.images?.[0]?.image_url ||
+                  "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=400&auto=format&fit=crop";
 
                 return (
-                  <tr key={prod.id} className="hover:bg-ivory/50 transition-colors">
-                    <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-ivory-sand border border-botanical-200 flex-shrink-0">
+                  <tr key={prod.id} className="group hover:bg-ivory/60 transition-colors">
+                    <td className="py-3 px-2 xl:px-3">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEdit(prod)}
+                        className="flex items-center gap-2 xl:gap-2.5 text-left group/item w-full min-w-0"
+                        title="Click to edit product name, picture & inventory"
+                      >
+                        <div className="w-9 h-9 xl:w-10 xl:h-10 rounded-lg overflow-hidden bg-ivory-sand border border-botanical-200 flex-shrink-0">
                           <img
-                            src={prod.images?.[0]?.image_url || "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=400&auto=format&fit=crop"}
+                            src={primaryThumb}
                             alt={prod.name}
                             className="w-full h-full object-cover"
                           />
                         </div>
                         <div className="min-w-0">
-                          <span className="font-semibold text-botanical-950 block truncate max-w-xs">
+                          <span className="font-semibold text-botanical-950 group-hover/item:text-clay transition-colors block truncate max-w-[120px] lg:max-w-[140px] xl:max-w-[230px]">
                             {prod.name}
                           </span>
-                          <span className="text-charcoal-muted text-[11px] block truncate">
+                          <span className="text-charcoal-muted text-[11px] block truncate max-w-[120px] lg:max-w-[140px] xl:max-w-[230px]">
+                            <span className="xl:hidden font-mono">{prod.sku} · </span>
                             {prod.species} · {prod.variety}
                           </span>
                         </div>
-                      </div>
+                      </button>
                     </td>
 
-                    <td className="py-3.5 px-4 text-charcoal-muted font-medium">
+                    <td className="py-3 px-2 xl:px-3 text-charcoal-muted font-medium whitespace-nowrap hidden xl:table-cell">
                       {prod.category_name || "Grafted"}
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono text-charcoal-muted">
+                    <td className="py-3 px-2 xl:px-3 font-mono text-charcoal-muted whitespace-nowrap hidden xl:table-cell">
                       {prod.sku}
                     </td>
 
-                    <td className="py-3.5 px-4 text-right font-mono font-semibold text-botanical-950">
+                    <td className="py-3 px-2 xl:px-3 text-right font-mono font-semibold text-botanical-950 whitespace-nowrap">
                       {formatPrice(prod.sale_price ?? prod.price)}
                     </td>
 
-                    <td className="py-3.5 px-4 text-center">
+                    <td className="py-3 px-2 xl:px-3 text-center whitespace-nowrap">
                       {isOut ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 font-semibold text-[10px]">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-100 text-red-800 font-semibold text-[10px]">
                           <AlertTriangle className="w-3 h-3 text-red-600" /> Out of Stock
                         </span>
                       ) : isLow ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold text-[10px]">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold text-[10px]">
                           Low (≤ {prod.low_stock_threshold})
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px]">
-                          <Check className="w-3 h-3" /> Adequate ({prod.stock_quantity})
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px]">
+                          <Check className="w-3 h-3" /> Adequate
                         </span>
                       )}
                     </td>
 
-                    <td className="py-3.5 px-4 text-center">
+                    <td className="py-3 px-1.5 xl:px-3 text-center">
                       <span
-                        className={`font-mono text-sm font-bold px-2 py-0.5 rounded ${
+                        className={`font-mono text-sm font-bold px-1.5 xl:px-2 py-0.5 rounded ${
                           isOut
                             ? "bg-red-50 text-red-700"
                             : isLow
@@ -407,8 +431,8 @@ export default function InventoryManager({ initialProducts, categories }: Invent
                     </td>
 
                     {/* Quick Adjust Buttons */}
-                    <td className="py-3.5 px-4 text-center">
-                      <div className="inline-flex items-center gap-1.5">
+                    <td className="py-3 px-1.5 xl:px-3 text-center">
+                      <div className="inline-flex items-center gap-1">
                         <button
                           type="button"
                           onClick={() => handleQuickStep(prod.id, prod.stock_quantity - 1)}
@@ -431,29 +455,17 @@ export default function InventoryManager({ initialProducts, categories }: Invent
                       </div>
                     </td>
 
-                    {/* Action Column with Explicit Working Edit Button */}
-                    <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <a
-                          href={`/shop/${prod.slug}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 rounded-lg text-botanical-500 hover:text-botanical-950 hover:bg-botanical-100 transition-colors"
-                          title="Preview on live storefront"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-
-                        <button
-                          type="button"
-                          onClick={() => handleOpenEdit(prod)}
-                          className="px-3 py-1.5 rounded-lg bg-botanical-900 hover:bg-botanical-950 text-ivory text-xs font-semibold inline-flex items-center gap-1.5 shadow-subtle transition-colors"
-                          title="Edit product details and inventory levels"
-                        >
-                          <Edit2 className="w-3.5 h-3.5" />
-                          <span>Edit</span>
-                        </button>
-                      </div>
+                    {/* Preview Column */}
+                    <td className="py-3 px-2 xl:px-4 text-right whitespace-nowrap">
+                      <a
+                        href={`/shop/${prod.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 rounded-lg text-botanical-500 hover:text-botanical-950 hover:bg-botanical-100 transition-colors inline-flex items-center justify-center"
+                        title="Preview on live storefront"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
                     </td>
                   </tr>
                 );
@@ -472,6 +484,104 @@ export default function InventoryManager({ initialProducts, categories }: Invent
         </div>
       </div>
 
+      {/* Mobile Inventory Cards (Edit button always visible without horizontal scrolling) */}
+      <div className="md:hidden space-y-3">
+        {filtered.map((prod) => {
+          const isOut = prod.stock_quantity === 0;
+          const isLow = prod.stock_quantity <= prod.low_stock_threshold && !isOut;
+          const isUpdating = updatingId === prod.id;
+          const primaryThumb =
+            prod.images?.find((img) => img.is_primary)?.image_url ||
+            prod.images?.[0]?.image_url ||
+            "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=400&auto=format&fit=crop";
+
+          return (
+            <div
+              key={prod.id}
+              className="rounded-2xl bg-white border border-botanical-200/80 p-4 shadow-subtle space-y-3 text-xs"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleOpenEdit(prod)}
+                  className="flex items-center gap-3 min-w-0 text-left flex-1"
+                  title="Click to edit product name, picture & inventory"
+                >
+                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-ivory-sand border border-botanical-200 flex-shrink-0">
+                    <img src={primaryThumb} alt={prod.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-botanical-950 truncate">{prod.name}</h3>
+                    <p className="text-[11px] text-charcoal-muted truncate">
+                      {prod.sku} · {prod.category_name || "Grafted"}
+                    </p>
+                    <p className="font-mono font-semibold text-botanical-900 mt-0.5">
+                      {formatPrice(prod.sale_price ?? prod.price)}
+                    </p>
+                  </div>
+                </button>
+
+                <a
+                  href={`/shop/${prod.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg text-botanical-500 hover:text-botanical-950 hover:bg-botanical-100 transition-colors flex-shrink-0"
+                  title="Preview on live storefront"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-botanical-100">
+                <div>
+                  {isOut ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 font-semibold text-[10px]">
+                      <AlertTriangle className="w-3 h-3 text-red-600" /> Out of Stock
+                    </span>
+                  ) : isLow ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold text-[10px]">
+                      Low Stock ({prod.stock_quantity})
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px]">
+                      <Check className="w-3 h-3" /> In Stock ({prod.stock_quantity})
+                    </span>
+                  )}
+                </div>
+
+                <div className="inline-flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleQuickStep(prod.id, prod.stock_quantity - 1)}
+                    disabled={prod.stock_quantity <= 0 || isUpdating}
+                    className="p-1.5 rounded-lg border border-botanical-300 hover:bg-botanical-100 text-botanical-900 disabled:opacity-30"
+                  >
+                    <Minus className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="font-mono font-bold text-sm text-botanical-950 min-w-[2ch] text-center">
+                    {prod.stock_quantity}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickStep(prod.id, prod.stock_quantity + 1)}
+                    disabled={isUpdating}
+                    className="p-1.5 rounded-lg border border-botanical-300 hover:bg-botanical-100 text-botanical-900"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {filtered.length === 0 && (
+          <div className="rounded-2xl bg-white border border-botanical-200 p-8 text-center text-charcoal-muted">
+            <p className="font-medium text-sm">No products match your search or filter criteria.</p>
+          </div>
+        )}
+      </div>
+
       {/* Full Edit Modal */}
       {isModalOpen && editingProduct && (
         <div className="fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6 flex items-center justify-center">
@@ -482,19 +592,32 @@ export default function InventoryManager({ initialProducts, categories }: Invent
 
           <div className="relative w-full max-w-3xl bg-white rounded-3xl border border-botanical-200 shadow-2xl p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-botanical-100">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-clay font-semibold">
-                  Inventory &amp; Product Editor
-                </span>
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-botanical-950">
-                  Edit: {editingProduct.name}
-                </h2>
+            <div className="flex items-center justify-between gap-4 pb-4 border-b border-botanical-100">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-12 h-12 rounded-xl overflow-hidden bg-ivory-sand border border-botanical-200 flex-shrink-0">
+                  <img
+                    src={
+                      editingProduct.images?.find((img) => img.is_primary)?.image_url ||
+                      editingProduct.images?.[0]?.image_url ||
+                      "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=400&auto=format&fit=crop"
+                    }
+                    alt={editingProduct.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-clay font-semibold block">
+                    Inventory &amp; Product Editor · {editingProduct.sku}
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-botanical-950 truncate">
+                    Edit: {editingProduct.name || "Untitled Plant"}
+                  </h2>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={handleCancel}
-                className="p-1.5 text-botanical-400 hover:text-botanical-950 rounded-lg hover:bg-botanical-100 transition-colors"
+                className="p-1.5 text-botanical-400 hover:text-botanical-950 rounded-lg hover:bg-botanical-100 transition-colors flex-shrink-0"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -523,6 +646,19 @@ export default function InventoryManager({ initialProducts, categories }: Invent
                       setIsDirty(true);
                     }}
                     className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5 text-botanical-950 focus:outline-none focus:border-botanical-700 font-medium"
+                  />
+                </div>
+
+                {/* Integrated Image & Media Manager (Right below Name for quick picture & name updates) */}
+                <div className="sm:col-span-2 p-4 rounded-2xl bg-ivory/60 border border-botanical-200">
+                  <ImageUploadManager
+                    images={editingProduct.images || []}
+                    onChange={(imgs: ProductImage[]) => {
+                      setEditingProduct({ ...editingProduct, images: imgs });
+                      setIsDirty(true);
+                    }}
+                    label="Product Photographs & Main Picture"
+                    helperText="Click 'Change Main Photo' to replace the primary photo right away, or upload/paste multiple gallery images."
                   />
                 </div>
 
@@ -596,6 +732,41 @@ export default function InventoryManager({ initialProducts, categories }: Invent
                     }}
                     className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5"
                   />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    Flower Color & Pattern
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.flower_color || ""}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, flower_color: e.target.value });
+                      setIsDirty(true);
+                    }}
+                    placeholder="e.g. Deep Velvet Dark Crimson"
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-botanical-900 mb-1">
+                    Petal Layer Form
+                  </label>
+                  <select
+                    value={editingProduct.petal_type || "Single"}
+                    onChange={(e) => {
+                      setEditingProduct({ ...editingProduct, petal_type: e.target.value });
+                      setIsDirty(true);
+                    }}
+                    className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5"
+                  >
+                    <option value="Single">Single</option>
+                    <option value="Double Layer">Double Layer</option>
+                    <option value="Triple Layer">Triple Layer</option>
+                    <option value="Rosette">Rosette / Multi</option>
+                  </select>
                 </div>
               </div>
 
@@ -770,19 +941,6 @@ export default function InventoryManager({ initialProducts, categories }: Invent
                     setIsDirty(true);
                   }}
                   className="w-full bg-ivory border border-botanical-300 rounded-xl px-4 py-2.5 text-botanical-950"
-                />
-              </div>
-
-              {/* Integrated Image & Media Manager */}
-              <div className="pt-2">
-                <ImageUploadManager
-                  images={editingProduct.images || []}
-                  onChange={(imgs: ProductImage[]) => {
-                    setEditingProduct({ ...editingProduct, images: imgs });
-                    setIsDirty(true);
-                  }}
-                  label="Product Photographs & Image Gallery"
-                  helperText="Upload or paste photos of this product. Select the primary photo that appears on storefront catalog cards."
                 />
               </div>
 

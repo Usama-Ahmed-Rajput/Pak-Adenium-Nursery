@@ -10,6 +10,7 @@ import { Search, Package, Clock, Truck, CheckCircle2, AlertCircle, ArrowRight } 
 export const metadata: Metadata = {
   title: "Track Your Order — Pak Adenium Nursery",
   description: "Check the status, payment verification, and dispatch details of your Pak Adenium order.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

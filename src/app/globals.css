@@ -16,6 +16,8 @@
     color: #1D211D;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    direction: ltr;
+    unicode-bidi: embed;
   }
 
   body {

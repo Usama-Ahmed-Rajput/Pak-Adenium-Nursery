@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { MessageCircle, Phone, Mail, MapPin, ShieldCheck, Truck, Sparkles, Heart } from "lucide-react";
+import { Phone, Mail, MapPin, ShieldCheck, Truck, Sparkles, Heart } from "lucide-react";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 interface FooterProps {
   nurseryName?: string;
@@ -200,7 +201,7 @@ export default function Footer({
                 rel="noopener noreferrer"
                 className="hover:text-[#25D366] transition-colors flex items-center gap-1.5"
               >
-                <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
+                <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366]" />
                 <span>WhatsApp Live Chat</span>
               </a>
             </li>

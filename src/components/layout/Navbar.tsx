@@ -9,7 +9,6 @@ import {
   Search,
   Menu,
   X,
-  MessageCircle,
   ArrowRight,
   ChevronDown,
   ShieldCheck,
@@ -17,6 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import SearchModal from "@/components/ui/SearchModal";
+import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
 interface NavbarProps {
   announcement?: {
@@ -173,7 +173,7 @@ export default function Navbar({
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors flex items-center gap-1"
                 >
-                  <MessageCircle className="w-3 h-3 text-emerald-400" />
+                  <WhatsAppIcon className="w-3 h-3 text-emerald-400" />
                   <span>Help: {phone}</span>
                 </a>
               </div>
@@ -408,7 +408,7 @@ export default function Navbar({
                 }`}
                 title="Direct WhatsApp Consultation"
               >
-                <MessageCircle className="w-3.5 h-3.5 text-white" />
+                <WhatsAppIcon className="w-3.5 h-3.5 text-white" />
                 <span className="hidden sm:inline">WhatsApp</span>
               </a>
 
@@ -543,7 +543,7 @@ export default function Navbar({
                 rel="noopener noreferrer"
                 className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors shadow-sm"
               >
-                <MessageCircle className="w-4 h-4" />
+                <WhatsAppIcon className="w-4 h-4" />
                 <span>Chat on WhatsApp</span>
               </a>
 

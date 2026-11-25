@@ -389,23 +389,28 @@ export async function saveProduct(
   }
 
   // Cleanly sync product_images
-  if (Array.isArray(product.images) && product.images.length > 0) {
+  if (Array.isArray(product.images)) {
+    const validImages = product.images.filter((img) => img && img.image_url && img.image_url.trim() !== "");
+
     // Delete existing images for this product
     await supabaseAdmin.from("product_images").delete().eq("product_id", id);
 
-    const imagesToInsert = product.images.map((img, idx) => ({
-      id: img.id && isUuid(img.id) ? img.id : crypto.randomUUID(),
-      product_id: id,
-      image_url: img.image_url,
-      alt_text: img.alt_text || product.name,
-      is_primary: idx === 0 ? (img.is_primary ?? true) : Boolean(img.is_primary),
-      display_order: Number(img.display_order ?? idx + 1),
-      created_at: now,
-    }));
+    if (validImages.length > 0) {
+      const hasPrimary = validImages.some((img) => Boolean(img.is_primary));
+      const imagesToInsert = validImages.map((img, idx) => ({
+        id: img.id && isUuid(img.id) ? img.id : crypto.randomUUID(),
+        product_id: id,
+        image_url: img.image_url.trim(),
+        alt_text: img.alt_text || product.name,
+        is_primary: hasPrimary ? Boolean(img.is_primary) : idx === 0,
+        display_order: Number(img.display_order ?? idx + 1),
+        created_at: now,
+      }));
 
-    const { error: imgErr } = await supabaseAdmin.from("product_images").insert(imagesToInsert);
-    if (imgErr) {
-      console.warn("Failed to insert synced product images:", imgErr);
+      const { error: imgErr } = await supabaseAdmin.from("product_images").insert(imagesToInsert);
+      if (imgErr) {
+        console.warn("Failed to insert synced product images:", imgErr);
+      }
     }
   }
 
