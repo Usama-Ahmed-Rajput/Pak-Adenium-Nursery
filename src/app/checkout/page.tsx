@@ -137,9 +137,9 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Order placed successfully! Clear cart & redirect
+      // Order placed successfully! Clear cart & redirect to clean URL (token is in HttpOnly cookie)
       clearCart();
-      router.push(`/checkout/success?order=${data.order.order_number}`);
+      router.push(`/checkout/success?order=${encodeURIComponent(data.order.order_number)}`);
     } catch (err) {
       console.error("Order submit exception", err);
       setErrorMessage("Network error occurred. Please check your connection or contact us via WhatsApp.");

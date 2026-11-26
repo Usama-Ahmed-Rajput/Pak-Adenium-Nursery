@@ -93,7 +93,7 @@ BEGIN
         id, order_number, customer_name, customer_phone, customer_whatsapp, customer_email,
         province, city, area, shipping_address, order_notes,
         subtotal, shipping_fee, discount, total, payment_method, payment_status, order_status,
-        created_at, updated_at
+        access_token_hash, created_at, updated_at
     ) VALUES (
         v_order_id, v_order_number,
         p_order_payload->>'customer_name',
@@ -108,6 +108,7 @@ BEGIN
         v_subtotal, v_shipping_fee, 0, v_total,
         p_order_payload->>'payment_method',
         'Pending', 'Pending',
+        NULLIF(p_order_payload->>'access_token_hash', ''),
         NOW(), NOW()
     );
 

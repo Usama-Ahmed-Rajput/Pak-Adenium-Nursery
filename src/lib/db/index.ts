@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import {
   Product,
   ProductImage,
@@ -708,13 +709,59 @@ export async function getOrderByIdOrNumber(idOrNumber: string): Promise<Order | 
   }
 }
 
+export async function getOrderWithAccessToken(
+  orderNumber: string,
+  rawToken: string
+): Promise<Order | null> {
+  try {
+    const trimmedOrder = orderNumber.trim();
+    const trimmedToken = rawToken.trim();
+    if (!trimmedOrder || !trimmedToken) return null;
+
+    const { data, error } = await supabaseAdmin
+      .from("orders")
+      .select("*, items:order_items(*)")
+      .ilike("order_number", trimmedOrder)
+      .maybeSingle();
+
+    if (error || !data || !data.access_token_hash) {
+      return null;
+    }
+
+    const storedHash = String(data.access_token_hash).trim();
+    if (!/^[0-9a-f]{64}$/i.test(storedHash)) {
+      return null;
+    }
+
+    const providedHash = crypto.createHash("sha256").update(trimmedToken).digest("hex");
+    const providedBuf = Buffer.from(providedHash, "hex");
+    const storedBuf = Buffer.from(storedHash, "hex");
+
+    if (providedBuf.length !== storedBuf.length) {
+      return null;
+    }
+
+    const isValid = crypto.timingSafeEqual(providedBuf, storedBuf);
+
+    if (!isValid) return null;
+
+    return mapOrder(data);
+  } catch (err) {
+    console.error("getOrderWithAccessToken error:", err);
+    return null;
+  }
+}
+
 export async function createOrder(
   payload: PlaceOrderPayload
-): Promise<{ success: boolean; order?: Order; error?: string }> {
+): Promise<{ success: boolean; order?: Order; accessToken?: string; error?: string }> {
   try {
     if (!payload.items || payload.items.length === 0) {
       return { success: false, error: "Your shopping bag is empty." };
     }
+
+    const accessToken = crypto.randomBytes(32).toString("base64url");
+    const accessTokenHash = crypto.createHash("sha256").update(accessToken).digest("hex");
 
     // Call atomic Postgres function via Supabase RPC
     const { data, error } = await supabaseAdmin.rpc("create_order_atomic", {
@@ -729,6 +776,7 @@ export async function createOrder(
         shipping_address: payload.shipping_address,
         order_notes: payload.order_notes || null,
         payment_method: payload.payment_method,
+        access_token_hash: accessTokenHash,
       },
       p_order_items: payload.items.map((it) => ({
         product_id: it.product_id,
@@ -751,7 +799,7 @@ export async function createOrder(
       return { success: false, error: "Failed to load newly placed order" };
     }
 
-    return { success: true, order: createdOrder };
+    return { success: true, order: createdOrder, accessToken };
   } catch (err: any) {
     console.error("createOrder unexpected error:", err);
     return { success: false, error: err?.message || "An unexpected error occurred while placing your order" };
@@ -1185,7 +1233,6 @@ export async function submitReview(payload: {
   customer_name: string;
   rating: number;
   comment: string;
-  verified_purchase?: boolean;
 }): Promise<PlantReview> {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
@@ -1193,15 +1240,15 @@ export async function submitReview(payload: {
   const insertData = {
     id,
     product_id: payload.product_id,
-    customer_name: payload.customer_name,
+    customer_name: payload.customer_name.trim(),
     rating: Math.max(1, Math.min(5, Math.round(payload.rating))),
-    comment: payload.comment,
-    verified_purchase: payload.verified_purchase ?? false,
-    is_approved: false, // Default moderation state
+    comment: payload.comment.trim(),
+    verified_purchase: false, // Never trust client-supplied verification
+    is_approved: false, // Strict moderation state
     created_at: now,
   };
 
-  const { error } = await supabase.from("reviews").insert(insertData);
+  const { error } = await supabaseAdmin.from("reviews").insert(insertData);
   if (error) {
     console.error("submitReview error:", error);
     throw new Error(`Failed to submit review: ${error.message}`);
@@ -1259,7 +1306,7 @@ export async function submitInquiry(payload: {
     created_at: now,
   };
 
-  const { error } = await supabase.from("inquiries").insert(insertData);
+  const { error } = await supabaseAdmin.from("inquiries").insert(insertData);
   if (error) {
     console.error("submitInquiry error:", error);
     throw new Error(`Failed to submit inquiry: ${error.message}`);

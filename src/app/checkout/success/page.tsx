@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import React from "react";
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { getOrderByIdOrNumber, getSiteSettings } from "@/lib/db";
+import { getOrderWithAccessToken, getSiteSettings } from "@/lib/db";
 import { formatPrice, buildOrderConfirmationWhatsApp } from "@/lib/utils";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -21,14 +22,29 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+export const dynamic = "force-dynamic";
+
 interface SuccessPageProps {
   searchParams: Promise<{ order?: string }>;
 }
 
 export default async function OrderSuccessPage({ searchParams }: SuccessPageProps) {
-  const { order: orderNumber } = await searchParams;
+  const [{ order: orderNumber }, cookieStore] = await Promise.all([
+    searchParams,
+    cookies(),
+  ]);
+
+  const rawCookie = cookieStore.get("pak_order_access")?.value || "";
+  const sepIdx = rawCookie.indexOf(":");
+  const cookieOrder = sepIdx > 0 ? rawCookie.slice(0, sepIdx) : "";
+  const cookieToken = sepIdx > 0 ? rawCookie.slice(sepIdx + 1) : "";
+  const tokenMatchesOrder =
+    Boolean(orderNumber) &&
+    cookieOrder.toLowerCase() === orderNumber!.trim().toLowerCase() &&
+    Boolean(cookieToken);
+
   const [order, settings] = await Promise.all([
-    orderNumber ? getOrderByIdOrNumber(orderNumber) : null,
+    tokenMatchesOrder ? getOrderWithAccessToken(orderNumber!, cookieToken) : null,
     getSiteSettings(),
   ]);
 
@@ -39,17 +55,25 @@ export default async function OrderSuccessPage({ searchParams }: SuccessPageProp
         <main className="flex-1 bg-ivory py-16 text-center">
           <div className="max-w-md mx-auto px-4 space-y-4">
             <h1 className="font-serif text-3xl font-medium text-botanical-950">
-              Order Inquiry
+              Order Access Verification Required
             </h1>
             <p className="text-sm text-charcoal-muted">
-              We could not find the requested order reference. Please check your order number or contact our WhatsApp desk.
+              For your privacy, full order invoices require a valid confirmation link. You can check your masked parcel status using our Order Lookup page or contact our WhatsApp desk.
             </p>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-botanical-900 text-ivory text-sm font-medium"
-            >
-              Return to Nursery Home <ArrowRight className="w-4 h-4" />
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <Link
+                href="/order-lookup"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-botanical-900 text-ivory text-sm font-medium"
+              >
+                Track Your Order <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-botanical-300 text-botanical-900 text-sm font-medium"
+              >
+                Return Home
+              </Link>
+            </div>
           </div>
         </main>
         <Footer />

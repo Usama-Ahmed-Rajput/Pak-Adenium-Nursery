@@ -42,11 +42,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       order: result.order,
       message: "Order placed successfully",
     });
+
+    if (result.order && result.accessToken) {
+      response.cookies.set("pak_order_access", `${result.order.order_number}:${result.accessToken}`, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/checkout/success",
+        maxAge: 60 * 60 * 24, // 24 hours
+      });
+    }
+
+    return response;
   } catch (error) {
     console.error("Order creation route error:", error);
     return NextResponse.json(
