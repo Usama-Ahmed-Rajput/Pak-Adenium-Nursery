@@ -269,7 +269,7 @@ export const initialProducts: Product[] = [
     plant_age: "2.5 Years",
     is_grafted: true,
     pot_size: "8-inch Terracotta Bowl",
-    description: "A signature proprietary nursery hybrid developed right here in our Multan growing grounds. Features double ruffled petals of glowing magenta-ruby radiating outward from an amber gold starburst center.",
+    description: "A signature proprietary nursery hybrid developed right here in our Karachi growing grounds. Features double ruffled petals of glowing magenta-ruby radiating outward from an amber gold starburst center.",
     care_watering: "Moderate watering in spring and summer. Withhold water when leaves begin yellowing before winter rest.",
     care_sunlight: "Full sun. The golden center deepens dramatically with high UV exposure.",
     care_temperature: "Very hardy in dry subtropical climates (tested up to 47°C).",
@@ -686,9 +686,9 @@ export const initialSiteSettings: SiteSettings = {
     hero_secondary_text: "About Our Nursery",
     hero_secondary_link: "/about",
     story_badge: "Horticultural Heritage",
-    story_title: "Living Sculptures Cultivated Under the Punjab Sun",
+    story_title: "Living Sculptures Cultivated Under the Karachi Sun",
     story_description:
-      "Pak Adenium is a specialized botanical nursery rooted in Multan, Pakistan. We cultivate mature Desert Roses with massive swollen caudexes, drought resilience, and multi-layered flower genetics.",
+      "Pak Adenium is a specialized botanical nursery rooted in Karachi, Pakistan. We cultivate mature Desert Roses with massive swollen caudexes, drought resilience, and multi-layered flower genetics.",
   },
   seo: {
     meta_title: "Pak Adenium — Premium Desert Rose Nursery Pakistan",

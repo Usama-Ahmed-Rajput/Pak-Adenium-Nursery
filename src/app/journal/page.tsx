@@ -72,7 +72,7 @@ export default async function JournalPage() {
               The Growing Journal
             </h1>
             <p className="text-sm sm:text-base text-charcoal-muted leading-relaxed">
-              Field-tested cultivation wisdom formulated through years of caring for Desert Roses under Pakistan&rsquo;s intense climatic swings—from 47°C dry Multan heat to monsoon downpours and winter rest.
+              Field-tested cultivation wisdom formulated through years of caring for Desert Roses under Pakistan&rsquo;s intense climatic swings—from Karachi&rsquo;s coastal sun and summer heat to monsoon downpours and winter rest.
             </p>
           </div>
 

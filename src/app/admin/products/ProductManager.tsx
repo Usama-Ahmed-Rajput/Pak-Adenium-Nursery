@@ -99,7 +99,7 @@ export default function ProductManager({ initialProducts, categories }: ProductM
       plant_age: "2.5 Years",
       is_grafted: true,
       pot_size: "8-inch Nursery Pot",
-      description: "Cultivated in our Multan nursery beds with high sun exposure.",
+      description: "Cultivated in our Karachi nursery beds with high sun exposure.",
       care_watering: "Water thoroughly only when topsoil is 100% bone dry.",
       care_sunlight: "Full direct sun (6-8 hours minimum).",
       care_temperature: "25°C to 45°C. Protect from heavy winter frost.",

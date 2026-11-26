@@ -252,7 +252,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   Cultivated for Pakistan Climate Resilience
                 </div>
                 <p className="text-charcoal-muted leading-relaxed">
-                  Unlike imported imports that arrive dehydrated and suffer shock under Pakistan&rsquo;s dry extreme summers, this plant has been fully acclimated outdoors in our Multan benches. It is actively metabolizing and rooted into fast-draining mineral media.
+                  Unlike imported plants that arrive dehydrated and suffer shock under Pakistan&rsquo;s intense summers, this plant has been fully acclimated outdoors in our Karachi nursery benches. It is actively metabolizing and rooted into fast-draining mineral media.
                 </p>
               </div>
             </div>

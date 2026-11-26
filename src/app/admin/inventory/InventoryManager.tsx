@@ -347,7 +347,7 @@ export default function InventoryManager({ initialProducts, categories, initialE
                 <th className="py-3 px-2 xl:px-3 font-semibold text-center">Alert Status</th>
                 <th className="py-3 px-1.5 xl:px-3 font-semibold text-center">Stock</th>
                 <th className="py-3 px-1.5 xl:px-3 font-semibold text-center">Quick Adjust</th>
-                <th className="py-3 px-2 xl:px-4 font-semibold text-right whitespace-nowrap">Preview</th>
+                <th className="py-3 px-2 xl:px-4 font-semibold text-right whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-botanical-100">
@@ -455,17 +455,28 @@ export default function InventoryManager({ initialProducts, categories, initialE
                       </div>
                     </td>
 
-                    {/* Preview Column */}
+                    {/* Actions Column (Edit & Storefront Preview) */}
                     <td className="py-3 px-2 xl:px-4 text-right whitespace-nowrap">
-                      <a
-                        href={`/shop/${prod.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-1.5 rounded-lg text-botanical-500 hover:text-botanical-950 hover:bg-botanical-100 transition-colors inline-flex items-center justify-center"
-                        title="Preview on live storefront"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
+                      <div className="inline-flex items-center justify-end gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEdit(prod)}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-botanical-800 text-white hover:bg-botanical-900 font-medium text-xs transition-colors shadow-xs"
+                          title="Edit product name, pictures, prices & inventory"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                          <span>Edit</span>
+                        </button>
+                        <a
+                          href={`/shop/${prod.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-1.5 rounded-lg text-botanical-500 hover:text-botanical-950 hover:bg-botanical-100 transition-colors inline-flex items-center justify-center"
+                          title="Preview on live storefront"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -521,15 +532,26 @@ export default function InventoryManager({ initialProducts, categories, initialE
                   </div>
                 </button>
 
-                <a
-                  href={`/shop/${prod.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-botanical-500 hover:text-botanical-950 hover:bg-botanical-100 transition-colors flex-shrink-0"
-                  title="Preview on live storefront"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEdit(prod)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-botanical-800 text-white hover:bg-botanical-900 font-medium text-xs transition-colors shadow-xs"
+                    title="Edit product name, pictures, prices & inventory"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                    <span>Edit</span>
+                  </button>
+                  <a
+                    href={`/shop/${prod.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-lg text-botanical-500 hover:text-botanical-950 hover:bg-botanical-100 transition-colors flex-shrink-0"
+                    title="Preview on live storefront"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
 
               <div className="flex items-center justify-between pt-2 border-t border-botanical-100">

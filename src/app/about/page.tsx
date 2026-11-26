@@ -9,7 +9,7 @@ import { Sparkles, Heart, Sun, ShieldCheck } from "lucide-react";
 export const metadata: Metadata = {
   title: "About Pak Adenium — Desert Rose Nursery in Pakistan",
   description:
-    "Learn about Pak Adenium, our Desert Rose propagation grounds in Multan and Lahore, and our outdoor acclimation standards for Adenium plants in Pakistan.",
+    "Learn about Pak Adenium, our Desert Rose propagation grounds in Karachi, and our outdoor acclimation standards for Adenium plants in Pakistan.",
   alternates: {
     canonical: "/about",
   },
@@ -90,7 +90,7 @@ export default async function AboutPage() {
               The Journey of Acclimation
             </h2>
             <p>
-              Growing Adeniums in Pakistan requires deep understanding of regional microclimates. The searing dry heat of Multan and Punjab summers accelerates photosynthesis and caudex water retention, yet the torrential monsoon rains can devastate root systems if drainage is compromised.
+              Growing Adeniums in Pakistan requires deep understanding of regional microclimates. The coastal sun and warm humidity of Karachi accelerate photosynthesis and caudex water retention, yet the torrential monsoon rains can devastate root systems if drainage is compromised.
             </p>
             <p>
               From day one, we discarded peat-heavy, waterlogged potting mixes in favor of custom-sieved mineral substrates composed of crushed volcanic rock, washed river sand, and aged organic mulch. Every root system is given room to breathe, preventing fungal rot while encouraging dramatic radial flare.
