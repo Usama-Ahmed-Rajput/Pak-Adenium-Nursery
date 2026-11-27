@@ -52,7 +52,7 @@ const COURIER_OPTIONS = [
   "M&P Express Logistics",
   "Trax Logistics",
   "PostEx",
-  "Direct Nursery Delivery (Multan/Lahore)",
+  "Direct Nursery Delivery (Karachi)",
 ];
 
 export default function OrderManager({ initialOrders, highlightId }: OrderManagerProps) {

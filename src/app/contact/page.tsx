@@ -4,28 +4,29 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ContactForm from "@/components/contact/ContactForm";
 import { getSiteSettings } from "@/lib/db";
-import { buildBreadcrumbSchema } from "@/lib/seo";
+import { buildBreadcrumbSchema, buildOpenGraphMeta } from "@/lib/seo";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import WhatsAppIcon from "@/components/ui/WhatsAppIcon";
 
+const contactTitle = "Contact Us — WhatsApp & Nursery Info";
+const contactDescription =
+  "Contact Pak Adenium Nursery in Pakistan via WhatsApp, phone, or email for Desert Rose plant availability, care guidance, seeds, and nationwide delivery.";
+
 export const metadata: Metadata = {
-  title: "Contact Pak Adenium Nursery — WhatsApp & Farm Inquiries",
-  description:
-    "Contact Pak Adenium Nursery in Pakistan for Adenium plant availability, Desert Rose care advice, Adenium seeds, and nationwide live plant dispatch.",
+  title: contactTitle,
+  description: contactDescription,
   alternates: {
     canonical: "/contact",
   },
-  openGraph: {
-    title: "Contact Pak Adenium Nursery — WhatsApp & Inquiries",
-    description:
-      "Reach Pak Adenium via WhatsApp, phone, or email for Desert Rose plants and nationwide delivery in Pakistan.",
+  openGraph: buildOpenGraphMeta({
+    title: `${contactTitle} | Pak Adenium`,
+    description: contactDescription,
     url: "/contact",
-  },
+  }),
   twitter: {
     card: "summary_large_image",
-    title: "Contact Pak Adenium Nursery",
-    description:
-      "Get in touch with Pak Adenium for Desert Rose plants, Adenium seeds, and dispatch across Pakistan.",
+    title: `${contactTitle} | Pak Adenium`,
+    description: contactDescription,
   },
 };
 

@@ -691,9 +691,9 @@ export const initialSiteSettings: SiteSettings = {
       "Pak Adenium is a specialized botanical nursery rooted in Karachi, Pakistan. We cultivate mature Desert Roses with massive swollen caudexes, drought resilience, and multi-layered flower genetics.",
   },
   seo: {
-    meta_title: "Pak Adenium — Premium Desert Rose Nursery Pakistan",
+    meta_title: "Pak Adenium — Desert Rose & Adenium Nursery Pakistan",
     meta_description:
-      "Pakistan's premier botanical nursery specializing in rare Desert Rose (Adenium) plants, multi-petal grafted blooms, sculptural Arabicum caudex bonsai, and fresh seeds. Nationwide safe delivery.",
+      "Shop rare Desert Rose (Adenium) plants, grafted multi-petal blooms, Arabicum caudex bonsai & fresh seeds at Pak Adenium with safe delivery in Pakistan.",
     meta_keywords: [
       "Adenium Pakistan",
       "Desert Rose plants",

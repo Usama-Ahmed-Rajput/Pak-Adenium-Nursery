@@ -4,14 +4,14 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CatalogView from "@/components/shop/CatalogView";
 import { getProducts, getCategories, getSiteSettings } from "@/lib/db";
-import { buildBreadcrumbSchema } from "@/lib/seo";
+import { buildBreadcrumbSchema, buildOpenGraphMeta } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "Buy Adenium Plants & Desert Rose Bonsai in Pakistan";
+  const title = "Buy Adenium & Desert Rose in Pakistan";
   const description =
-    "Shop grafted multi-petal Adenium plants, Adenium Arabicum caudex bonsai, rare Dorset Horn hybrids, fresh Adenium seeds, and mineral substrates at Pak Adenium with nationwide delivery.";
+    "Explore grafted multi-petal Adenium plants, Adenium Arabicum caudex bonsai, rare hybrids, fresh seeds, and mineral potting soil with delivery in Pakistan.";
 
   return {
     title,
@@ -19,11 +19,11 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: "/shop",
     },
-    openGraph: {
+    openGraph: buildOpenGraphMeta({
       title: `${title} | Pak Adenium`,
       description,
       url: "/shop",
-    },
+    }),
     twitter: {
       card: "summary_large_image",
       title: `${title} | Pak Adenium`,

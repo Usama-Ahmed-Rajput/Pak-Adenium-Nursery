@@ -5,15 +5,15 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getArticles, getSiteSettings } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
-import { buildBreadcrumbSchema } from "@/lib/seo";
+import { buildBreadcrumbSchema, buildOpenGraphMeta } from "@/lib/seo";
 import { BookOpen, Clock, ArrowRight } from "lucide-react";
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "The Growing Journal — Adenium Care & Cultivation Guides in Pakistan";
+  const title = "Adenium Care & Growing Guides Pakistan";
   const description =
-    "Expert guides from Pak Adenium on cultivating Desert Rose plants in Pakistan: caudex fattening, root training, monsoon rot prevention, winter dormancy, and Adenium seed germination.";
+    "Read expert Pak Adenium guides on cultivating Desert Rose plants in Pakistan: caudex fattening, root training, monsoon rot care, dormancy, and seed sowing.";
 
   return {
     title,
@@ -21,11 +21,11 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: "/journal",
     },
-    openGraph: {
+    openGraph: buildOpenGraphMeta({
       title: `${title} | Pak Adenium`,
       description,
       url: "/journal",
-    },
+    }),
     twitter: {
       card: "summary_large_image",
       title: `${title} | Pak Adenium`,

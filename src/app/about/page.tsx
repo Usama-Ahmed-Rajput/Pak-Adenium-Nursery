@@ -3,27 +3,28 @@ import { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getSiteSettings } from "@/lib/db";
-import { buildBreadcrumbSchema } from "@/lib/seo";
+import { buildBreadcrumbSchema, buildOpenGraphMeta } from "@/lib/seo";
 import { Sparkles, Heart, Sun, ShieldCheck } from "lucide-react";
 
+const aboutTitle = "About Our Desert Rose Nursery Pakistan";
+const aboutDescription =
+  "Discover Pak Adenium in Karachi—our Desert Rose propagation grounds, outdoor sun-acclimation standards, and sculptural Adenium bonsai cultivation in Pakistan.";
+
 export const metadata: Metadata = {
-  title: "About Pak Adenium — Desert Rose Nursery in Pakistan",
-  description:
-    "Learn about Pak Adenium, our Desert Rose propagation grounds in Karachi, and our outdoor acclimation standards for Adenium plants in Pakistan.",
+  title: aboutTitle,
+  description: aboutDescription,
   alternates: {
     canonical: "/about",
   },
-  openGraph: {
-    title: "About Pak Adenium — Desert Rose Nursery in Pakistan",
-    description:
-      "Learn about Pak Adenium, our Desert Rose propagation grounds, and our passion for nurturing sculptural Adenium bonsai in Pakistan.",
+  openGraph: buildOpenGraphMeta({
+    title: `${aboutTitle} | Pak Adenium`,
+    description: aboutDescription,
     url: "/about",
-  },
+  }),
   twitter: {
     card: "summary_large_image",
-    title: "About Pak Adenium — Desert Rose Nursery in Pakistan",
-    description:
-      "Specialist Adenium botanical nursery in Pakistan cultivating outdoor-acclimated Desert Rose plants and caudex bonsai.",
+    title: `${aboutTitle} | Pak Adenium`,
+    description: aboutDescription,
   },
 };
 

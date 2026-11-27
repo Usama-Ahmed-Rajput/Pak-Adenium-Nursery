@@ -4,7 +4,14 @@ import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { getSiteSettings } from "@/lib/db";
-import { buildOrganizationSchema, buildWebsiteSchema, getSiteUrl } from "@/lib/seo";
+import {
+  buildOpenGraphMeta,
+  buildOrganizationSchema,
+  buildWebsiteSchema,
+  DEFAULT_OG_IMAGE,
+  fitMetaDescription,
+  getSiteUrl,
+} from "@/lib/seo";
 
 const dmSerif = DM_Serif_Display({
   weight: ["400"],
@@ -24,13 +31,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   const siteName = settings.general.nursery_name || "Pak Adenium";
   const tagline = settings.general.tagline || "Living Sculptures. Grown with Care.";
-  const metaTitle = settings.seo?.meta_title || `${siteName} — Buy Adenium & Desert Rose Plants in Pakistan`;
-  const metaDescription =
-    settings.seo?.meta_description ||
-    "Pak Adenium is Pakistan's premier botanical nursery for Desert Rose (Adenium) plants, grafted multi-petal blooms, Adenium Arabicum caudex bonsai, and fresh Adenium seeds with nationwide delivery.";
-  const ogImage =
-    settings.seo?.og_image ||
-    "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=1200&auto=format&fit=crop";
+  const defaultDescription =
+    "Shop rare Desert Rose (Adenium) plants, grafted multi-petal blooms, Arabicum caudex bonsai & fresh seeds at Pak Adenium with safe delivery in Pakistan.";
+  const metaTitle = settings.seo?.meta_title || `${siteName} — Desert Rose & Adenium Nursery Pakistan`;
+  const metaDescription = fitMetaDescription(settings.seo?.meta_description, defaultDescription);
+  const ogImage = settings.seo?.og_image || DEFAULT_OG_IMAGE;
   const metaKeywords =
     settings.seo?.meta_keywords && settings.seo.meta_keywords.length > 0
       ? settings.seo.meta_keywords
@@ -60,22 +65,14 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: "/",
     },
-    openGraph: {
-      type: "website",
-      locale: "en_PK",
-      url: "/",
-      siteName: siteName,
+    openGraph: buildOpenGraphMeta({
       title: `${siteName} — ${tagline}`,
       description: metaDescription,
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: `${siteName} Desert Rose & Adenium Collection in Pakistan`,
-        },
-      ],
-    },
+      url: "/",
+      siteName,
+      image: ogImage,
+      imageAlt: `${siteName} Desert Rose & Adenium Collection in Pakistan`,
+    }),
     twitter: {
       card: "summary_large_image",
       title: metaTitle,

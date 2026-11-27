@@ -1,7 +1,51 @@
 import { SiteSettings } from "@/types";
 
+export const DEFAULT_OG_IMAGE =
+  "https://images.unsplash.com/photo-1596724806740-d9962a93fa21?q=80&w=1200&auto=format&fit=crop";
+
 export function getSiteUrl(): string {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://pak-adenium-nursery.vercel.app").replace(/\/$/, "");
+}
+
+/**
+ * Ensures meta descriptions stay within the 150-160 character SEO sweet spot,
+ * trimming cleanly at a word boundary if a stored CMS value exceeds 160 chars.
+ */
+export function fitMetaDescription(text: string | undefined | null, fallback: string): string {
+  const clean = (text || "").replace(/\s+/g, " ").trim();
+  if (!clean) return fallback;
+  if (clean.length <= 160) return clean;
+  const sliced = clean.slice(0, 157);
+  const lastSpace = sliced.lastIndexOf(" ");
+  return `${(lastSpace > 120 ? sliced.slice(0, lastSpace) : sliced).replace(/[.,;:!?-]+$/, "")}...`;
+}
+
+export function buildOpenGraphMeta(params: {
+  title: string;
+  description: string;
+  url: string;
+  siteName?: string;
+  image?: string;
+  imageAlt?: string;
+  type?: "website" | "article";
+}) {
+  const siteName = params.siteName || "Pak Adenium";
+  return {
+    type: params.type || "website",
+    locale: "en_PK",
+    url: params.url,
+    siteName,
+    title: params.title,
+    description: params.description,
+    images: [
+      {
+        url: params.image || DEFAULT_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: params.imageAlt || `${siteName} — Desert Rose & Adenium Nursery in Pakistan`,
+      },
+    ],
+  };
 }
 
 export function buildOrganizationSchema(settings: SiteSettings) {
